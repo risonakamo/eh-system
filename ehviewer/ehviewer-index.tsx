@@ -8,21 +8,16 @@ import Viewer from "viewerjs";
 import "./ehviewer-index.less";
 import "viewerjs/dist/viewer.css";
 
-class EhViewerMainRouter extends React.Component
+interface RouterMatch
 {
-  render()
-  {
-    return <Router>
-      <Switch>
-        <Route component={EhViewerMain}/>
-      </Switch>
-    </Router>;
+  params:{
+    albumpath:string
   }
 }
 
 interface EhViewerProps
 {
-  location:Location
+  match:RouterMatch
 }
 
 interface EhViewerState
@@ -39,6 +34,7 @@ interface EhViewerState
 
 class EhViewerMain extends React.Component
 {
+  props:EhViewerProps
   state:EhViewerState
 
   theviewer:any //the viewer object
@@ -74,7 +70,7 @@ class EhViewerMain extends React.Component
     this.hideTimer=0;
   }
 
-  componentDidMount()
+  async componentDidMount()
   {
     this.theviewer=new Viewer(this.theviewerElement.current as Element,{
       inline:true,
@@ -117,6 +113,8 @@ class EhViewerMain extends React.Component
 
     this.keyControl();
     this.mouseHider();
+
+    this.linksLoad(await requestAlbum(this.props.match.params.albumpath));
   }
 
   componentDidUpdate()
@@ -282,6 +280,28 @@ class EhViewerMain extends React.Component
         </ul>
       </div>
     </>;
+  }
+}
+
+// retrieve images from a specified album path
+async function requestAlbum(path:string):Promise<string[]>
+{
+  return (await fetch("/get-album",{
+    method:"POST",
+    body:path
+  })).json();
+}
+
+// --- main ---
+class EhViewerMainRouter extends React.Component
+{
+  render()
+  {
+    return <Router>
+      <Switch>
+        <Route path="/:initial/:albumpath+" component={EhViewerMain}/>
+      </Switch>
+    </Router>;
   }
 }
 
