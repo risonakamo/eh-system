@@ -1,0 +1,1 @@
+type RefObject<T>=import("react").RefObject<T>;
