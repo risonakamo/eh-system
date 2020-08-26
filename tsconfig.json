@@ -1,0 +1,16 @@
+{
+    "compilerOptions":{
+        "strict":true,
+        "jsx":"react",
+        "lib":["dom","ESNext"],
+        "esModuleInterop":true
+    },
+    "include":[
+        "**/*.ts",
+        "**/*.d.ts",
+        "**/*.tsx"
+    ],
+    "exclude":[
+        "node_modules"
+    ]
+}
