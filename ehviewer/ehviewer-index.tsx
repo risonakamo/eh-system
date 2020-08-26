@@ -6,6 +6,7 @@ import _ from "lodash";
 import Viewer from "viewerjs";
 
 import "./ehviewer-index.less";
+import "viewerjs/dist/viewer.css";
 
 class EhViewerMainRouter extends React.Component
 {
@@ -17,6 +18,11 @@ class EhViewerMainRouter extends React.Component
       </Switch>
     </Router>;
   }
+}
+
+interface EhViewerProps
+{
+  location:Location
 }
 
 interface EhViewerState
@@ -43,7 +49,7 @@ class EhViewerMain extends React.Component
 
   hideTimer:number //for mouse timer
 
-  constructor(props:any)
+  constructor(props:EhViewerProps)
   {
     super(props);
     this.navigateImage=this.navigateImage.bind(this);
@@ -111,6 +117,11 @@ class EhViewerMain extends React.Component
 
     this.keyControl();
     this.mouseHider();
+  }
+
+  componentDidUpdate()
+  {
+    this.theviewer.update();
   }
 
   //do fit width on the viewer
@@ -242,19 +253,30 @@ class EhViewerMain extends React.Component
     });
   }
 
+  // given array of valid urls, set the imgs to those urls
+  linksLoad(urls:string[]):void
+  {
+    var imgs:ImageObject[]=_.map(urls,(x:string)=>{
+      return {
+        link:x
+      };
+    });
+
+    this.setState({imgs});
+  }
+
   render()
   {
     if (this.theviewer)
     {
-
+      this.theviewer.view(this.state.currentImageIndex);
     }
 
     var mouseHideClass:string=this.state.mouseHidden?"mouse-hide":"";
-
     return <>
       <div className={`the-viewer ${mouseHideClass}`}>
         <ul ref={this.theviewerElement}>
-          {_.map(this.state.imgs,(x,i)=>{
+          {_.map(this.state.imgs,(x:ImageObject,i:number)=>{
             return <li key={i}><img src={x.link}/></li>;
           })}
         </ul>
