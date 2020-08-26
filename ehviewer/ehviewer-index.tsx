@@ -4,39 +4,29 @@ import {BrowserRouter as Router,Switch,Route} from "react-router-dom";
 
 import "./ehviewer-index.less";
 
-class EhViewerMain extends React.Component
+class EhViewerMainRouter extends React.Component
 {
   render()
   {
     return <Router>
       <Switch>
-        <Route component={TestComponent}/>
+        <Route component={EhViewerMain}/>
       </Switch>
     </Router>;
   }
 }
 
-class TestComponent extends React.Component
+class EhViewerMain extends React.Component
 {
-  props:{
-    location:Location
-  }
-
-  componentDidMount()
-  {
-    console.log("mounted");
-  }
-
   render()
   {
-    console.log(this.props.location);
-    return <div>{this.props.location.pathname}</div>;
+    return <div>hi</div>;
   }
 }
 
 function main()
 {
-  ReactDOM.render(<EhViewerMain/>,document.querySelector(".main"));
+  ReactDOM.render(<EhViewerMainRouter/>,document.querySelector(".main"));
 }
 
 window.onload=main;

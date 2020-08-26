@@ -65,11 +65,5 @@ module.exports={
         modules:false,
         chunks:false,
         assets:false
-    },
-
-    externals:{
-        "react":"React",
-        "react-dom":"ReactDOM",
-        "react-router-dom":"ReactRouterDOM"
     }
 };
