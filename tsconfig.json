@@ -3,7 +3,8 @@
         "strict":true,
         "jsx":"react",
         "lib":["dom","ESNext"],
-        "esModuleInterop":true
+        "esModuleInterop":true,
+        "strictPropertyInitialization": false
     },
     "include":[
         "**/*.ts",
