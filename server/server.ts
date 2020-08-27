@@ -1,10 +1,15 @@
 import express from "express";
-import {getImagesInPath} from "./imagedata-service";
 import serveIndex from "serve-index";
 import {join} from "path";
 
+import {getImagesInPath,generateThumbnailsForPath} from "./imagedata-service";
+
 // path to image data directory, relative to this server file.
 const imageDataDir:string="../../h";
+const thumbnailDataDir:string="../thumbnaildata";
+
+const fullImageDataDir:string=join(__dirname,imageDataDir);
+const fullThumbnailDataDir:string=join(__dirname,thumbnailDataDir);
 
 const app=express();
 
@@ -15,7 +20,6 @@ app.use("/viewer/*",express.static(`${__dirname}/../ehviewer`));
 app.use("/build",express.static(`${__dirname}/../build`));
 
 // image data directory
-var fullImageDataDir:string=join(__dirname,imageDataDir);
 app.use("/imagedata",express.static(fullImageDataDir));
 // temporary directory browser
 app.use("/imagedata",serveIndex(fullImageDataDir,{
@@ -23,7 +27,9 @@ app.use("/imagedata",serveIndex(fullImageDataDir,{
 }));
 
 // apis
+// get an album from the image data folder. also generate thumbnails if needed.
 app.post("/get-album",express.text(),(req,res)=>{
+    generateThumbnailsForPath(fullImageDataDir,fullThumbnailDataDir,req.body);
     res.json(getImagesInPath(fullImageDataDir,req.body));
 });
 
