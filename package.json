@@ -4,7 +4,8 @@
   "scripts": {
     "build": "webpack",
     "watch": "webpack --watch",
-    "server": "tsc --project tsconfig-node.json && node node-build/server"
+    "server": "tsc --project tsconfig-node.json && node node-build/server",
+    "server-run":"node node-build/server"
   },
   "devDependencies": {
     "@babel/core": "^7.11.4",
@@ -25,7 +26,8 @@
     "typescript": "^4.0.2",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
-    "webpackbar": "^4.0.0"
+    "webpackbar": "^4.0.0",
+    "@types/serve-index": "^1.7.30"
   },
   "dependencies": {
     "express": "^4.17.1",
@@ -33,6 +35,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
+    "serve-index": "^1.9.1",
     "viewerjs": "^1.6.1"
   }
 }

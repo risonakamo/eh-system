@@ -292,7 +292,7 @@ async function requestAlbum(path:string):Promise<string[]>
   })).json();
 }
 
-// --- main ---
+// --- main wrapper ---
 class EhViewerMainRouter extends React.Component
 {
   render()
