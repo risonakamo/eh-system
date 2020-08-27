@@ -17,7 +17,7 @@ interface RouterMatch
 
 interface EhViewerProps
 {
-  match:RouterMatch
+  match:RouterMatch //match from router
 }
 
 interface EhViewerState
@@ -32,6 +32,7 @@ interface EhViewerState
   currentImageIndex:number //the current image index
 }
 
+/* EhViewerMain(RouterMatch match) */
 class EhViewerMain extends React.Component
 {
   props:EhViewerProps
