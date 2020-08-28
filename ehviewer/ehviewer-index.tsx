@@ -1,9 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import {BrowserRouter as Router,Switch,Route} from "react-router-dom";
-
 import _ from "lodash";
 import Viewer from "viewerjs";
+
+import PreviewPanel from "./components/previewpanel/previewpanel";
 
 import "./ehviewer-index.less";
 import "viewerjs/dist/viewer.css";
@@ -46,10 +47,13 @@ class EhViewerMain extends React.Component
 
   hideTimer:number //for mouse timer
 
+  thumbnails:string[] //thumbnails more static than images so stored here
+
   constructor(props:EhViewerProps)
   {
     super(props);
     this.navigateImage=this.navigateImage.bind(this);
+    this.togglePanelShowing=this.togglePanelShowing.bind(this);
 
     this.state={
       currentImage:null,
@@ -116,6 +120,9 @@ class EhViewerMain extends React.Component
     this.mouseHider();
 
     this.linksLoad(await requestAlbum(this.props.match.params.albumpath));
+    requestThumbnails(this.props.match.params.albumpath).then((result:string[])=>{
+      this.thumbnails=result;
+    });
   }
 
   componentDidUpdate()
@@ -264,6 +271,12 @@ class EhViewerMain extends React.Component
     this.setState({imgs});
   }
 
+  // toggle preview panel showing state
+  togglePanelShowing():void
+  {
+    this.setState({panelShowing:!this.state.panelShowing});
+  }
+
   render()
   {
     if (this.theviewer)
@@ -280,6 +293,10 @@ class EhViewerMain extends React.Component
           })}
         </ul>
       </div>
+
+      <PreviewPanel thumbnails={this.thumbnails} currentImageIndex={this.state.currentImageIndex}
+        showing={this.state.panelShowing} navigateImage={this.navigateImage}
+        togglePanelShowing={this.togglePanelShowing}/>
     </>;
   }
 }
@@ -288,6 +305,15 @@ class EhViewerMain extends React.Component
 async function requestAlbum(path:string):Promise<string[]>
 {
   return (await fetch("/get-album",{
+    method:"POST",
+    body:path
+  })).json();
+}
+
+// get thumbnail urls for album path
+async function requestThumbnails(path:string):Promise<string[]>
+{
+  return (await fetch("/get-thumbnails",{
     method:"POST",
     body:path
   })).json();

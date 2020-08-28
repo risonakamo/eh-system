@@ -4,7 +4,7 @@ import {join} from "path";
 import imageThumbnail from "image-thumbnail";
 
 // given an album path within imagedata, return the urls for that path.
-export function getImagesInPath(imageDataPath:string,targetPath:string):string[]
+export function getImagesInPath(imageDataPath:string,targetPath:string,thumbnails?:boolean):string[]
 {
     var imgs:string[];
 
@@ -18,8 +18,10 @@ export function getImagesInPath(imageDataPath:string,targetPath:string):string[]
         return [];
     }
 
+    var imageType:string=thumbnails?"thumbnaildata":"imagedata";
+
     return _.map(imgs,(x:string)=>{
-        return `/imagedata/${targetPath}/${x}`;
+        return `/${imageType}/${targetPath}/${x}`;
     });
 }
 
