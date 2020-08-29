@@ -120,9 +120,6 @@ class EhViewerMain extends React.Component
     this.mouseHider();
 
     this.linksLoad(await requestAlbum(this.props.match.params.albumpath));
-    requestThumbnails(this.props.match.params.albumpath).then((result:string[])=>{
-      this.thumbnails=result;
-    });
   }
 
   componentDidUpdate()
@@ -269,6 +266,16 @@ class EhViewerMain extends React.Component
     });
 
     this.setState({imgs});
+
+    this.thumbnails=_.map(urls,(x:string)=>{
+      var match=x.match(/\/imagedata(.*)/);
+      if (match && match[1])
+      {
+        return `/thumbnaildata/${match[1]}`;
+      }
+
+      return "";
+    });
   }
 
   // toggle preview panel showing state
@@ -305,15 +312,6 @@ class EhViewerMain extends React.Component
 async function requestAlbum(path:string):Promise<string[]>
 {
   return (await fetch("/get-album",{
-    method:"POST",
-    body:path
-  })).json();
-}
-
-// get thumbnail urls for album path
-async function requestThumbnails(path:string):Promise<string[]>
-{
-  return (await fetch("/get-thumbnails",{
     method:"POST",
     body:path
   })).json();
