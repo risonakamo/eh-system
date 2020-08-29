@@ -91,6 +91,23 @@ export async function generateThumbnailsForPath(imageDataPath:string,thumbnailDa
         return;
     }
 
+    // split out all directories
+    var dirs:string[]=[];
+    imgs=_.filter(imgs,(x:string)=>{
+        if (fs.statSync(join(imageDataPath,targetPath,x)).isDirectory())
+        {
+            dirs.push(x);
+            return false;
+        }
+
+        return true;
+    });
+
+    // call thumbnail generate on all subdirs
+    dirs.forEach((x:string)=>{
+        generateThumbnailsForPath(imageDataPath,thumbnailDataPath,posix.join(targetPath,x));
+    });
+
     // convert image paths and soon to be created thumbnail result paths
     var imgs=_.map(imgs,(x:string)=>{
         thumbnailResult.push(join(thumbnailDataPath,targetPath,x));
