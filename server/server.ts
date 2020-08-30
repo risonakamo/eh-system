@@ -17,6 +17,12 @@ const app=express();
 // eh viewer page
 app.use("/viewer/*",express.static(`${__dirname}/../ehviewer`));
 
+// album explore page
+app.use("/albums*",express.static(`${__dirname}/../albumexplore`));
+app.use("//",(req,res)=>{
+    res.redirect("/albums");
+});
+
 // web page combined build folder
 app.use("/build",express.static(`${__dirname}/../build`));
 
