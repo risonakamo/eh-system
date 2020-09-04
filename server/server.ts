@@ -26,6 +26,9 @@ app.use("//",(req,res)=>{
 // web page combined build folder
 app.use("/build",express.static(`${__dirname}/../build`));
 
+// fonts folder
+app.use("/assets/fonts",express.static(`${__dirname}/../fonts`));
+
 // image data directory
 app.use("/imagedata",express.static(fullImageDataDir));
 
