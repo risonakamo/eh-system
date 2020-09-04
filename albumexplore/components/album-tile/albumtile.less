@@ -1,5 +1,8 @@
 @import (reference) "../../abexplore-index.less";
 
+@temp-item-count-green: #479c85;
+@temp-item-count-green-dark: #283732;
+
 .album-tile
 {
     width: 180px;
@@ -14,16 +17,30 @@
         height: 100%;
     }
 
-    .title
+    // a label floating around the border of the tile
+    .float-label
     {
         position: absolute;
-        left: 0;
-        top: 0;
-        background: fade(@main-white,70%);
         color: @main-dark-back;
         font-size: 13px;
         letter-spacing: 0.7px;
         padding: 2px 8px 0px 8px;
-        line-height: 1.4;
+
+        &.title
+        {
+            left: 0;
+            top: 0;
+            background: fade(@main-white,70%);
+        }
+
+        &.item-count
+        {
+            position: absolute;
+            right: 0;
+            top: 0;
+            font-weight: bold;
+            color: @temp-item-count-green;
+            background: fade(@temp-item-count-green-dark,80%);
+        }
     }
 }
