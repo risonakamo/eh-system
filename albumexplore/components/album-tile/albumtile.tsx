@@ -1,4 +1,5 @@
 import React from "react";
+import {Link} from "react-router-dom";
 
 import "./albumtile.less";
 
@@ -17,11 +18,11 @@ export default class AlbumTile extends React.Component
 
   render()
   {
-    return <a className="album-tile" href={this.props.link}>
+    return <Link className="album-tile" to={this.props.link}>
       <div className="title float-label">{this.props.title}</div>
       <div className="item-count float-label">{this.props.items}</div>
       <div className="date float-label">{this.props.date}</div>
       <img src={this.props.img}/>
-    </a>;
+    </Link>;
   }
 }

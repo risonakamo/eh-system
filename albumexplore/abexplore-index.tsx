@@ -36,8 +36,22 @@ export default class AbExploreMain extends React.Component
 
   async componentDidMount()
   {
+    this.changeTargetPath(this.props.match.params.targetpath || "");
+  }
+
+  componentDidUpdate(prevProps:AbExploreProps)
+  {
+    if (prevProps.match.params.targetpath!=this.props.match.params.targetpath)
+    {
+      this.changeTargetPath(this.props.match.params.targetpath || "");
+    }
+  }
+
+  // navigate ab explore to a new target
+  async changeTargetPath(target:string):Promise<void>
+  {
     this.setState({
-      albumItems:await getAlbumInfo(this.props.match.params.targetpath || "")
+      albumItems:await getAlbumInfo(target)
     });
   }
 
@@ -47,7 +61,7 @@ export default class AbExploreMain extends React.Component
       <div className="tiles">
         {_.map(this.state.albumItems,(x:AlbumInfo)=>{
           return <AlbumTile key={x.title} img={x.img} date={x.date}
-            items={x.items} title={x.title} link="/viewer/deadflow"/>
+            items={x.items} title={x.title} link={x.title}/>
         })}
       </div>
     </>;
