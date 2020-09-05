@@ -2,6 +2,7 @@ import React from "react";
 import _ from "lodash";
 
 import AlbumTile from "./components/album-tile/albumtile";
+import AlbumToast from "./components/album-toast/albumtoast";
 
 import "./abexplore-index.less";
 
@@ -58,6 +59,7 @@ export default class AbExploreMain extends React.Component
   render()
   {
     return <>
+      <AlbumToast/>
       <div className="tiles">
         {_.map(this.state.albumItems,(x:AlbumInfo)=>{
           var link:string;

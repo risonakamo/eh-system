@@ -66,5 +66,7 @@ module.exports={
         modules:false,
         chunks:false,
         assets:false
-    }
+    },
+
+    devtool:"eval-source-map"
 };
