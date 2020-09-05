@@ -2,6 +2,7 @@ import fs from "fs-extra";
 import {join} from "path";
 import _ from "lodash";
 import moment from "moment";
+import normalize from "normalize-path";
 
 import {getImagesInPath2} from "./imagedata-service";
 
@@ -29,7 +30,7 @@ export function getAlbumInfo(imageDataPath:string,targetPath:string):AlbumInfo[]
         return {
             title:x,
             items:imagesAtDir.length,
-            img:_.sample(imagesAtDir) as string,
+            img:normalize(_.sample(imagesAtDir) as string).replace("imagedata","thumbnaildata"),
             date:moment(fs.statSync(fullitempath).mtime).format("YYYY-MM-DD"),
             album:pathHasNoSubDirs(fullitempath)
         };

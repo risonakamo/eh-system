@@ -1,6 +1,7 @@
 import fs from "fs-extra";
 import _ from "lodash";
 import {join,posix} from "path";
+import normalize from "normalize-path";
 import imageThumbnail from "image-thumbnail";
 
 // given an album path within imagedata, return the urls for that path.
@@ -43,7 +44,7 @@ export function getImagesInPath2(imageDataPath:string,targetPath:string):string[
     var imgNames:string[]=_.filter(targetItemNames,(x:string)=>{
         if (fs.statSync(join(imageDataPath,targetPath,x)).isDirectory())
         {
-            dirTargetPaths.push(posix.normalize(posix.join(targetPath,x)));
+            dirTargetPaths.push(normalize(posix.join(targetPath,x)));
             return false;
         }
 
@@ -52,7 +53,7 @@ export function getImagesInPath2(imageDataPath:string,targetPath:string):string[
 
     // converting all images to final abstract path
     imgNames=_.map(imgNames,(x:string)=>{
-        return posix.normalize(`/imagedata/${targetPath}/${x}`);
+        return normalize(`/imagedata/${targetPath}/${x}`);
     });
 
     // img results from subdirs

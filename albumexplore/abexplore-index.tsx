@@ -1,23 +1,56 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import _ from "lodash";
 
 import AlbumTile from "./components/album-tile/albumtile";
 
 import "./abexplore-index.less";
 
+interface AbExploreState
+{
+  albumItems:AlbumInfo[]
+}
+
 class AbExploreMain extends React.Component
 {
+  state:AbExploreState
+
+  constructor(props:any)
+  {
+    super(props);
+
+    this.state={
+      albumItems:[]
+    };
+  }
+
+  async componentDidMount()
+  {
+    this.setState({
+      albumItems:await getAlbumInfo("")
+    });
+  }
+
   render()
   {
     return <>
       <div className="tiles">
-        <AlbumTile img="/thumbnaildata/deadflow/neflim/05.jpg" date="20/02/01"
-          items={23} title="deadflow" link="/viewer/deadflow"/>
-        <AlbumTile img="/thumbnaildata/013_hamasuke/bache1/4.png" date="20/03/22"
-          items={10} title="bache1" link="/viewer/013_hamasuke/bache1"/>
+        {_.map(this.state.albumItems,(x:AlbumInfo)=>{
+          return <AlbumTile key={x.title} img={x.img} date={x.date}
+            items={x.items} title={x.title} link="/viewer/deadflow"/>
+        })}
       </div>
     </>;
   }
+}
+
+// get album info for a path
+async function getAlbumInfo(target:string):Promise<AlbumInfo[]>
+{
+  return (await fetch("/get-album-info",{
+    method:"POST",
+    body:target
+  })).json();
 }
 
 function main()
