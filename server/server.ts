@@ -3,6 +3,7 @@ import serveIndex from "serve-index";
 import {join} from "path";
 
 import {generateThumbnailsForPath,getImagesInPath2} from "./imagedata-service";
+import {getAlbumInfo} from "./album-service";
 
 // path to image data directory, relative to this server file.
 const imageDataDir:string="../../h";
