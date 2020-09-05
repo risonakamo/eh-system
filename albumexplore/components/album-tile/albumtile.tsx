@@ -2,15 +2,26 @@ import React from "react";
 
 import "./albumtile.less";
 
+interface AlbumTileProps
+{
+  img:string
+  date:string
+  items:number
+  title:string
+  link:string
+}
+
 export default class AlbumTile extends React.Component
 {
+  props:AlbumTileProps
+
   render()
   {
-    return <div className="album-tile">
-      <div className="title float-label">randomboobguy</div>
-      <div className="item-count float-label">23</div>
-      <div className="date float-label">20/02/01</div>
-      <img src="/thumbnaildata/deadflow/neflim/05.jpg"/>
-    </div>;
+    return <a className="album-tile" href={this.props.link}>
+      <div className="title float-label">{this.props.title}</div>
+      <div className="item-count float-label">{this.props.items}</div>
+      <div className="date float-label">{this.props.date}</div>
+      <img src={this.props.img}/>
+    </a>;
   }
 }

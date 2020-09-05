@@ -11,7 +11,10 @@ class AbExploreMain extends React.Component
   {
     return <>
       <div className="tiles">
-        <AlbumTile/>
+        <AlbumTile img="/thumbnaildata/deadflow/neflim/05.jpg" date="20/02/01"
+          items={23} title="deadflow" link="/viewer/deadflow"/>
+        <AlbumTile img="/thumbnaildata/013_hamasuke/bache1/4.png" date="20/03/22"
+          items={10} title="bache1" link="/viewer/013_hamasuke/bache1"/>
       </div>
     </>;
   }

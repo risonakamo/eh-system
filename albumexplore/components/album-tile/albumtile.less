@@ -7,11 +7,14 @@
 
 .album-tile
 {
+    display: inline-block;
+    position: relative;
     width: 180px;
     height: 180px;
     background-color: @main-dark;
     border: 1px solid fade(@main-white,60%);
-    position: relative;
+    margin: 2px;
+    user-select: none;
     cursor: pointer;
     transition: border @transition-time;
 
