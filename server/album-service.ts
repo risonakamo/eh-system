@@ -38,7 +38,7 @@ export function getAlbumInfo(imageDataPath:string,targetPath:string):AlbumInfo[]
             title:x,
             items:imagesAtDir.length,
             img:normalize(_.sample(imagesAtDir) as string).replace("imagedata","thumbnaildata"),
-            date:moment(fs.statSync(fullitempath).mtime).format("YYYY-MM-DD"),
+            date:moment(fs.statSync(fullitempath).mtime).format("YYYY/MM/DD"),
             album:pathHasNoSubDirs(fullitempath)
         };
     })) as AlbumInfo[];

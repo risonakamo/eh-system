@@ -45,12 +45,14 @@ app.use("/imagedata",serveIndex(fullImageDataDir,{
 // --- apis ---
 // get an album from the image data folder. also generate thumbnails if needed.
 app.post("/get-album",express.text(),(req,res)=>{
+    console.log("get album:",req.body);
     generateThumbnailsForPath(fullImageDataDir,fullThumbnailDataDir,req.body);
     res.json(getImagesInPath2(fullImageDataDir,req.body));
 });
 
 // given a target album path, retrieve album information for that path.
 app.post("/get-album-info",express.text(),(req,res)=>{
+    console.log("album info:",req.body);
     generateThumbnailsForPath(fullImageDataDir,fullThumbnailDataDir,req.body);
     res.json(getAlbumInfo(fullImageDataDir,req.body));
 });
