@@ -60,8 +60,25 @@ export default class AbExploreMain extends React.Component
     return <>
       <div className="tiles">
         {_.map(this.state.albumItems,(x:AlbumInfo)=>{
+          var link:string;
+          if (!x.album)
+          {
+            link=x.title;
+          }
+
+          else
+          {
+            var targetPath:string=this.props.match.params.targetpath || "";
+            if (targetPath.length)
+            {
+              targetPath+="/";
+            }
+
+            link=`/viewer/${targetPath}${x.title}`;
+          }
+
           return <AlbumTile key={x.title} img={x.img} date={x.date}
-            items={x.items} title={x.title} link={x.title}/>
+            items={x.items} title={x.title} link={link} realLink={x.album}/>
         })}
       </div>
     </>;

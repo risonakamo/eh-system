@@ -10,6 +10,7 @@ interface AlbumTileProps
   items:number
   title:string
   link:string
+  realLink?:boolean
 }
 
 export default class AlbumTile extends React.Component
