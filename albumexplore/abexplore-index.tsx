@@ -27,7 +27,7 @@ class AbExploreMain extends React.Component
   async componentDidMount()
   {
     this.setState({
-      albumItems:await getAlbumInfo("")
+      albumItems:await getAlbumInfo("013_hamasuke/bache1")
     });
   }
 

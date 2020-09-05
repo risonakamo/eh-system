@@ -3,6 +3,7 @@ import {join} from "path";
 import _ from "lodash";
 import moment from "moment";
 import normalize from "normalize-path";
+import {isDirectorySync} from "path-type";
 
 import {getImagesInPath2} from "./imagedata-service";
 
@@ -23,9 +24,15 @@ export function getAlbumInfo(imageDataPath:string,targetPath:string):AlbumInfo[]
         return [];
     }
 
-    return _.map(items,(x:string)=>{
-        var imagesAtDir:string[]=getImagesInPath2(imageDataPath,join(targetPath,x));
+    return _.filter(_.map(items,(x:string)=>{
         var fullitempath:string=join(fullTargetPath,x);
+
+        if (!isDirectorySync(fullitempath))
+        {
+            return null;
+        }
+
+        var imagesAtDir:string[]=getImagesInPath2(imageDataPath,join(targetPath,x));
 
         return {
             title:x,
@@ -34,7 +41,7 @@ export function getAlbumInfo(imageDataPath:string,targetPath:string):AlbumInfo[]
             date:moment(fs.statSync(fullitempath).mtime).format("YYYY-MM-DD"),
             album:pathHasNoSubDirs(fullitempath)
         };
-    });
+    })) as AlbumInfo[];
 }
 
 // determine if a path has no sub directories in it.
