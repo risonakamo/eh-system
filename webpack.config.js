@@ -7,7 +7,7 @@ module.exports={
     mode:"development",
     entry:{
         ehviewer:"./ehviewer/ehviewer-index.tsx",
-        abexplore:"./albumexplore/abexplore-index.tsx"
+        abexplore:"./albumexplore/abexplore-router.tsx"
     },
     output:{
         path:`${__dirname}/build`,

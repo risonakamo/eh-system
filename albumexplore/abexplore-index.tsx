@@ -1,18 +1,28 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import _ from "lodash";
 
 import AlbumTile from "./components/album-tile/albumtile";
 
 import "./abexplore-index.less";
 
+interface AbExploreProps
+{
+  // router match provides path
+  match:{
+    params:{
+      targetpath:string|null
+    }
+  }
+}
+
 interface AbExploreState
 {
   albumItems:AlbumInfo[]
 }
 
-class AbExploreMain extends React.Component
+export default class AbExploreMain extends React.Component
 {
+  props:AbExploreProps
   state:AbExploreState
 
   constructor(props:any)
@@ -27,7 +37,7 @@ class AbExploreMain extends React.Component
   async componentDidMount()
   {
     this.setState({
-      albumItems:await getAlbumInfo("013_hamasuke/bache1")
+      albumItems:await getAlbumInfo(this.props.match.params.targetpath || "")
     });
   }
 
@@ -52,10 +62,3 @@ async function getAlbumInfo(target:string):Promise<AlbumInfo[]>
     body:target
   })).json();
 }
-
-function main()
-{
-  ReactDOM.render(<AbExploreMain/>,document.querySelector(".main"));
-}
-
-window.onload=main;
