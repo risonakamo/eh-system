@@ -321,7 +321,7 @@ async function requestAlbum(path:string):Promise<string[]>
 // set the page title given album path
 function setTitle(albumpath:string):void
 {
-  document.title=_.last(albumpath.split("/"));
+  document.title=_.last(albumpath.split("/")) as string;
 }
 
 // --- main wrapper ---
