@@ -58,29 +58,13 @@ export default class AbExploreMain extends React.Component
 
   render()
   {
+    var targetpath:string=this.props.match.params.targetpath || "";
+
     return <>
-      <AlbumToast targetPath={this.props.match.params.targetpath || ""}/>
+      <AlbumToast targetPath={targetpath}/>
       <div className="tiles">
         {_.map(this.state.albumItems,(x:AlbumInfo)=>{
-          var link:string;
-          if (!x.album)
-          {
-            link=x.title;
-          }
-
-          else
-          {
-            var targetPath:string=this.props.match.params.targetpath || "";
-            if (targetPath.length)
-            {
-              targetPath+="/";
-            }
-
-            link=`/viewer/${targetPath}${x.title}`;
-          }
-
-          return <AlbumTile key={x.title} img={x.img} date={x.date}
-            items={x.items} title={x.title} link={link} realLink={x.album}/>
+          return createAlbumTile(x,targetpath);
         })}
       </div>
     </>;
@@ -94,4 +78,38 @@ async function getAlbumInfo(target:string):Promise<AlbumInfo[]>
     method:"POST",
     body:target
   })).json();
+}
+
+// create an albumtile for an album info. give it the current path, with no slash at the begining
+function createAlbumTile(info:AlbumInfo,currentPath:string):JSX.Element
+{
+  var linkPath:string;
+  if (!info.album)
+  {
+    if (currentPath.length)
+    {
+      linkPath=`/${currentPath}/${info.title}`;
+    }
+
+    else
+    {
+      linkPath=`/${info.title}`;
+    }
+  }
+
+  else
+  {
+    if (currentPath.length)
+    {
+      linkPath=`/viewer/${currentPath}/${info.title}`;
+    }
+
+    else
+    {
+      linkPath=`/viewer/${info.title}`;
+    }
+  }
+
+  return <AlbumTile key={info.title} img={info.img} date={info.date}
+    items={info.items} title={info.title} realLink={info.album} link={linkPath}/>;
 }
