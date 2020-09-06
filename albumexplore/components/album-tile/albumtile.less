@@ -44,11 +44,23 @@
         &.item-count
         {
             position: absolute;
-            right: 0;
-            top: 0;
             font-weight: bold;
             color: @temp-item-count-green;
             background: fade(@temp-item-count-green-dark,80%);
+
+            &.main-count
+            {
+                right: 0;
+                top: 0;
+            }
+
+            &.sub-count
+            {
+                right: 0;
+                top: 18px;
+                font-size: 10px;
+                padding: 0px 4px 0px 4px;
+            }
         }
 
         &.date

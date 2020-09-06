@@ -24,7 +24,7 @@ export function getAlbumInfo(imageDataPath:string,targetPath:string):AlbumInfo[]
         return [];
     }
 
-    return _.filter(_.map(items,(x:string)=>{
+    return _.filter(_.map(items,(x:string):AlbumInfo|null=>{
         var fullitempath:string=join(fullTargetPath,x);
 
         if (!isDirectorySync(fullitempath))
@@ -37,6 +37,7 @@ export function getAlbumInfo(imageDataPath:string,targetPath:string):AlbumInfo[]
         return {
             title:x,
             items:imagesAtDir.length,
+            immediateItems:fs.readdirSync(fullitempath).length,
             img:normalize(_.sample(imagesAtDir) as string).replace("imagedata","thumbnaildata"),
             date:moment(fs.statSync(fullitempath).mtime).format("YYYY/MM/DD"),
             album:pathHasNoSubDirs(fullitempath)

@@ -111,5 +111,6 @@ function createAlbumTile(info:AlbumInfo,currentPath:string):JSX.Element
   }
 
   return <AlbumTile key={info.title} img={info.img} date={info.date}
-    items={info.items} title={info.title} realLink={info.album} link={linkPath}/>;
+    items={info.items} title={info.title} realLink={info.album} link={linkPath}
+    subitems={info.immediateItems}/>;
 }
