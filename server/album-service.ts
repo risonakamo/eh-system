@@ -24,7 +24,7 @@ export function getAlbumInfo(imageDataPath:string,targetPath:string):AlbumInfo[]
         return [];
     }
 
-    return _.filter(_.map(items,(x:string):AlbumInfo|null=>{
+    return (_.filter(_.map(items,(x:string):AlbumInfo|null=>{
         var fullitempath:string=join(fullTargetPath,x);
 
         if (!isDirectorySync(fullitempath))
@@ -42,7 +42,7 @@ export function getAlbumInfo(imageDataPath:string,targetPath:string):AlbumInfo[]
             date:moment(fs.statSync(fullitempath).mtime).format("YYYY/MM/DD"),
             album:pathHasNoSubDirs(fullitempath)
         };
-    })) as AlbumInfo[];
+    })) as AlbumInfo[]).sort(albumInfoDateSort);
 }
 
 // determine if a path has no sub directories in it.
@@ -53,4 +53,23 @@ function pathHasNoSubDirs(fullpath:string):boolean
     return !_.some(items,(x:string)=>{
         return fs.statSync(join(fullpath,x)).isDirectory();
     });
+}
+
+// sort by date for album infos
+function albumInfoDateSort(a:AlbumInfo,b:AlbumInfo):number
+{
+    var adate:Date=new Date(a.date);
+    var bdate:Date=new Date(b.date);
+
+    if (adate>bdate)
+    {
+        return -1;
+    }
+
+    else if (adate<bdate)
+    {
+        return 1;
+    }
+
+    return 0;
 }
