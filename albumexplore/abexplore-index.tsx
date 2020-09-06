@@ -59,7 +59,7 @@ export default class AbExploreMain extends React.Component
   render()
   {
     return <>
-      <AlbumToast/>
+      <AlbumToast targetPath={this.props.match.params.targetpath || ""}/>
       <div className="tiles">
         {_.map(this.state.albumItems,(x:AlbumInfo)=>{
           var link:string;
