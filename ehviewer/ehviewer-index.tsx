@@ -120,6 +120,7 @@ class EhViewerMain extends React.Component
     this.mouseHider();
 
     this.linksLoad(await requestAlbum(this.props.match.params.albumpath));
+    setTitle(this.props.match.params.albumpath);
   }
 
   componentDidUpdate()
@@ -315,6 +316,12 @@ async function requestAlbum(path:string):Promise<string[]>
     method:"POST",
     body:path
   })).json();
+}
+
+// set the page title given album path
+function setTitle(albumpath:string):void
+{
+  document.title=_.last(albumpath.split("/"));
 }
 
 // --- main wrapper ---
