@@ -49,6 +49,7 @@
             color: @temp-item-count-green;
             background: fade(@temp-item-count-green-dark,80%);
             pointer-events: all;
+            transition: background-color @transition-time;
 
             &.main-count
             {
@@ -75,6 +76,14 @@
             background-color: white;
             padding: 1px 3px 0px 3px;
             transition: opacity @transition-time;
+        }
+    }
+
+    .count-holder:hover
+    {
+        .item-count
+        {
+            background-color: white;
         }
     }
 

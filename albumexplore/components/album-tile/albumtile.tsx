@@ -36,9 +36,11 @@ export default class AlbumTile extends React.Component
 
     return <div className="album-tile">
       <div className="title float-label">{this.props.title}</div>
-      <a className="main-count item-count float-label" href={this.props.sublink}>{this.props.items}</a>
-      <a className="sub-count item-count float-label" href={this.props.sublink}
-        style={{display:displaySubitems}}>{this.props.subitems}</a>
+      <div className="count-holder">
+        <a className="main-count item-count float-label" href={this.props.sublink}>{this.props.items}</a>
+        <a className="sub-count item-count float-label" href={this.props.sublink}
+          style={{display:displaySubitems}}>{this.props.subitems}</a>
+      </div>
       <div className="date float-label">{this.props.date}</div>
       {linkElement}
     </div>;
