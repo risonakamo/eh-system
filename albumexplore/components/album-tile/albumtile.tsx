@@ -7,10 +7,11 @@ interface AlbumTileProps
 {
   img:string
   date:string
-  items:number
-  subitems:number
+  items:number // main item count
+  subitems:number //sub item count
   title:string
   link:string
+  sublink:string
   realLink?:boolean
 }
 
@@ -22,24 +23,24 @@ export default class AlbumTile extends React.Component
   {
     var displaySubitems:string=this.props.items==this.props.subitems?"none":"";
 
-    var innerContent=<>
-      <div className="title float-label">{this.props.title}</div>
-      <div className="main-count item-count float-label">{this.props.items}</div>
-      <div className="sub-count item-count float-label"
-        style={{display:displaySubitems}}>{this.props.subitems}</div>
-      <div className="date float-label">{this.props.date}</div>
-      <img src={this.props.img}/>
-    </>;
-
+    var linkElement:JsxElement;
     if (!this.props.realLink)
     {
-      return <Link className="album-tile" to={this.props.link}>
-        {innerContent}
-      </Link>;
+      linkElement=<Link to={this.props.link}><img src={this.props.img}/></Link>;
     }
 
-    return <a className="album-tile" href={this.props.link}>
-      {innerContent}
-    </a>;
+    else
+    {
+      linkElement=<a href={this.props.link}><img src={this.props.img}/></a>;
+    }
+
+    return <div className="album-tile">
+      <div className="title float-label">{this.props.title}</div>
+      <a className="main-count item-count float-label" href={this.props.sublink}>{this.props.items}</a>
+      <a className="sub-count item-count float-label" href={this.props.sublink}
+        style={{display:displaySubitems}}>{this.props.subitems}</a>
+      <div className="date float-label">{this.props.date}</div>
+      {linkElement}
+    </div>;
   }
 }

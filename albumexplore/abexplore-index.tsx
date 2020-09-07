@@ -84,6 +84,21 @@ async function getAlbumInfo(target:string):Promise<AlbumInfo[]>
 function createAlbumTile(info:AlbumInfo,currentPath:string):JSX.Element
 {
   var linkPath:string;
+  var subPath:string;
+
+  // set the subpath, which is the path to the viewer
+  if (currentPath.length)
+  {
+    subPath=`/viewer/${currentPath}/${info.title}`;
+  }
+
+  else
+  {
+    subPath=`/viewer/${info.title}`;
+  }
+
+  // set the link path, which either leads to the album or opens the viewer
+  // if the item is an actual album
   if (!info.album)
   {
     if (currentPath.length)
@@ -99,18 +114,10 @@ function createAlbumTile(info:AlbumInfo,currentPath:string):JSX.Element
 
   else
   {
-    if (currentPath.length)
-    {
-      linkPath=`/viewer/${currentPath}/${info.title}`;
-    }
-
-    else
-    {
-      linkPath=`/viewer/${info.title}`;
-    }
+    linkPath=subPath;
   }
 
   return <AlbumTile key={info.title} img={info.img} date={info.date}
     items={info.items} title={info.title} realLink={info.album} link={linkPath}
-    subitems={info.immediateItems}/>;
+    subitems={info.immediateItems} sublink={subPath}/>;
 }
