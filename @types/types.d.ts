@@ -15,3 +15,9 @@ interface AlbumInfo
     date:string //last date album was edited
     album:boolean //whether it is an actual album, a folder containing only images
 }
+
+interface ItemCountColour
+{
+    color:string
+    backgroundColor:string
+}

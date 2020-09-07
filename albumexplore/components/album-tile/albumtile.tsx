@@ -1,6 +1,8 @@
 import React from "react";
 import {Link} from "react-router-dom";
 
+import valueToColourConfig from "./count-colour-resolvers";
+
 import "./albumtile.less";
 
 interface AlbumTileProps
@@ -21,8 +23,6 @@ export default class AlbumTile extends React.Component
 
   render()
   {
-    var displaySubitems:string=this.props.items==this.props.subitems?"none":"";
-
     var linkElement:JsxElement;
     if (!this.props.realLink)
     {
@@ -34,12 +34,19 @@ export default class AlbumTile extends React.Component
       linkElement=<a href={this.props.link}><img src={this.props.img}/></a>;
     }
 
+    var mainItemCountStyle=valueToColourConfig(this.props.items,100);
+    var subItemCountStyle={
+      display:this.props.items==this.props.subitems?"none":"",
+      ...valueToColourConfig(this.props.subitems,20)
+    };
+
     return <div className="album-tile">
       <div className="title float-label">{this.props.title}</div>
       <div className="count-holder">
-        <a className="main-count item-count float-label" href={this.props.sublink}>{this.props.items}</a>
+        <a className="main-count item-count float-label" href={this.props.sublink}
+          style={mainItemCountStyle}>{this.props.items}</a>
         <a className="sub-count item-count float-label" href={this.props.sublink}
-          style={{display:displaySubitems}}>{this.props.subitems}</a>
+          style={subItemCountStyle}>{this.props.subitems}</a>
       </div>
       <div className="date float-label">{this.props.date}</div>
       {linkElement}
