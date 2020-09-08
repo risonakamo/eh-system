@@ -36,7 +36,7 @@ export default class AlbumTile extends React.Component
 
     var mainItemCountStyle=valueToColourConfig(this.props.items,100);
     var subItemCountStyle={
-      display:this.props.items==this.props.subitems?"none":"",
+      display:this.props.realLink?"none":"",
       ...valueToColourConfig(this.props.subitems,20)
     };
 
