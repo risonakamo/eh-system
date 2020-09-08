@@ -29,6 +29,12 @@ export default class PreviewPanel extends React.PureComponent
     });
 
     return <div className={`preview-panel ${this.props.showing?"":"hidden"}`}>
+      <div className="header">
+        <a className="home-icon" href="/">
+          <img className="pink" src="/assets/imgs/icon-pink.png"/>
+          <img className="white" src="/assets/imgs/icon-white.png"/>
+        </a>
+      </div>
       {thumbnails}
     </div>;
   }

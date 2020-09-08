@@ -71,4 +71,46 @@
             height: 100%;
         }
     }
+
+    .header
+    {
+        height: 50px;
+        width: 100%;
+
+        .home-icon
+        {
+            position: relative;
+            padding-left: 6px;
+            cursor: pointer;
+
+            img
+            {
+                position: absolute;
+                transition: opacity .15s;
+
+                &.white
+                {
+
+                }
+
+                &.pink
+                {
+                    opacity: 0;
+                }
+            }
+
+            &:hover img
+            {
+                &.white
+                {
+                    opacity: 0;
+                }
+
+                &.pink
+                {
+                    opacity: 1;
+                }
+            }
+        }
+    }
 }
