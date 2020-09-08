@@ -30,6 +30,9 @@ app.use("/build",express.static(`${__dirname}/../build`));
 // fonts folder
 app.use("/assets/fonts",express.static(`${__dirname}/../fonts`));
 
+// img assets folder
+app.use("/assets/imgs",express.static(`${__dirname}/../imgs`));
+
 // image data directory
 app.use("/imagedata",express.static(fullImageDataDir));
 
