@@ -52,7 +52,7 @@ app.post("/get-album",express.text(),(req,res)=>{
 
 // given a target album path, retrieve album information for that path.
 app.post("/get-album-info",express.text(),(req,res)=>{
-    console.log("album info:",req.body);
+    console.log("album info:",req.body || "/");
     generateThumbnailsForPath(fullImageDataDir,fullThumbnailDataDir,req.body);
     res.json(getAlbumInfo(fullImageDataDir,req.body));
 });
