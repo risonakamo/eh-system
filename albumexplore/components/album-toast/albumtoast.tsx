@@ -2,6 +2,8 @@ import React from "react";
 import {Link} from "react-router-dom";
 import _ from "lodash";
 
+import SasButton from "../../../ehviewer/components/sas-button/sasbutton";
+
 import "./albumtoast.less";
 
 interface AlbumToastProps
@@ -27,8 +29,7 @@ export default class AlbumToast extends React.Component
   render()
   {
     return <div className="album-toasts">
-      <Link className="single-toast" to="/">HOME</Link>
-      <span className="toast-divider">/</span>
+      <SasButton href="/" className="home-icon" routerLink={true}/>
       {this.generateToasts()}
     </div>;
   }
