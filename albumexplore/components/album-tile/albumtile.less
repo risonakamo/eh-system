@@ -5,6 +5,22 @@
 
 @transition-time: .1s;
 
+@item-count-levels: lv1,lv2,lv3,lv4,lv5,lv6;
+@item-count-text:
+    #adaaa7,
+    #6692bb,
+    #479c85,
+    #b0603b,
+    #b9395c,
+    #af51b1;
+@item-count-backgrounds:
+    #2a2623cc,
+    #1c2a35cc,
+    #283732cc,
+    #37261ccc,
+    #401a25cc,
+    #3b213ecc;
+
 .album-tile
 {
     display: inline-block;
@@ -64,6 +80,8 @@
                 font-size: 10px;
                 padding: 0px 4px 0px 4px;
             }
+
+            .generateItemCountColourClasses(@item-count-levels,@item-count-text,@item-count-backgrounds);
         }
 
         &.date
@@ -101,4 +119,19 @@
             opacity: 1;
         }
     }
+}
+
+// create classes to colour item-count float labels
+// classNames: list of names to title each colour set
+// textColours: list of text colours
+// backgroundColours: list of background colours
+.generateItemCountColourClasses(@classNames,@textColours,@backgroundColours)
+{
+    each(@classNames,{
+        &.@{value}
+        {
+            color: extract(@textColours,@index);
+            background-color: extract(@backgroundColours,@index);
+        }
+    });
 }
