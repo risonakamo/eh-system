@@ -62,5 +62,5 @@ app.post("/get-album-info",express.text(),(req,res)=>{
 // --- end apis ---
 
 app.listen(80,()=>{
-    console.log("express started");
+    console.log("EH-SYSTEM started");
 });
