@@ -297,7 +297,7 @@ class EhViewerMain extends React.Component
       <div className={`the-viewer ${mouseHideClass}`}>
         <ul ref={this.theviewerElement}>
           {_.map(this.state.imgs,(x:ImageObject,i:number)=>{
-            return <li key={i}><img src={x.link}/></li>;
+            return <li key={i}><img src={x.link} loading="lazy"/></li>;
           })}
         </ul>
       </div>
