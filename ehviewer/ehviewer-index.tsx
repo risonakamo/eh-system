@@ -77,7 +77,7 @@ class EhViewerMain extends React.Component
 
   async componentDidMount()
   {
-    this.theviewer=new Viewer(this.theviewerElement.current as Element,{
+    this.theviewer=new Viewer(this.theviewerElement.current as HTMLElement,{
       inline:true,
       title:false,
       keyboard:false,

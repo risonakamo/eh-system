@@ -50,13 +50,6 @@ module.exports={
         // ]),
     ],
 
-    optimization:{
-        splitChunks:{
-            chunks:"all",
-            automaticNameDelimiter:"-"
-        }
-    },
-
     resolve:{
         extensions:[".tsx",".ts",".jsx",".js"]
     },

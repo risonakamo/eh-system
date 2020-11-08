@@ -2,9 +2,11 @@
     "compilerOptions":{
         "strict":true,
         "jsx":"react",
+        "target": "ESNext",
         "lib":["dom","ESNext"],
         "esModuleInterop":true,
-        "strictPropertyInitialization": false
+        "strictPropertyInitialization": false,
+        "moduleResolution": "node"
     },
     "include":[
         "**/*.ts",
