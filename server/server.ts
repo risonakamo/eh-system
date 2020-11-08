@@ -2,7 +2,7 @@ import express from "express";
 import serveIndex from "serve-index";
 import {join} from "path";
 
-import {generateThumbnailsForPath,getImagesInPath2} from "./imagedata-service";
+import {generateThumbnailsForPath,getImagesInPath2Flat} from "./imagedata-service";
 import {getAlbumInfo} from "./album-service";
 
 // path to image data directory, relative to this server file.
@@ -50,7 +50,7 @@ app.use("/imagedata",serveIndex(fullImageDataDir,{
 app.post("/get-album",express.text(),(req,res)=>{
     console.log("get album:",req.body);
     generateThumbnailsForPath(fullImageDataDir,fullThumbnailDataDir,req.body);
-    res.json(getImagesInPath2(fullImageDataDir,req.body));
+    res.json(getImagesInPath2Flat(fullImageDataDir,req.body));
 });
 
 // given a target album path, retrieve album information for that path.

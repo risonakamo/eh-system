@@ -5,7 +5,7 @@ import moment from "moment";
 import normalize from "normalize-path";
 import {isDirectorySync} from "path-type";
 
-import {getImagesInPath2} from "./imagedata-service";
+import {getImagesInPath2Flat} from "./imagedata-service";
 
 // given a target album path within the imagedata folder, return album information for items
 // in that folder.
@@ -32,7 +32,7 @@ export function getAlbumInfo(imageDataPath:string,targetPath:string):AlbumInfo[]
             return null;
         }
 
-        var imagesAtDir:string[]=getImagesInPath2(imageDataPath,join(targetPath,x));
+        var imagesAtDir:string[]=getImagesInPath2Flat(imageDataPath,join(targetPath,x));
 
         return {
             title:x,

@@ -4,64 +4,10 @@ import {join,posix} from "path";
 import normalize from "normalize-path";
 import imageThumbnail from "image-thumbnail";
 
-// given an album path within imagedata, return the urls for that path.
-export function getImagesInPath(imageDataPath:string,targetPath:string,thumbnails?:boolean):string[]
+// return image urls at target path.
+export function getImagesInPath2Flat(imageDataPath:string,targetPath:string):string[]
 {
-    var imgs:string[];
-
-    try
-    {
-        imgs=fs.readdirSync(join(imageDataPath,targetPath));
-    }
-
-    catch (err)
-    {
-        return [];
-    }
-
-    var imageType:string=thumbnails?"thumbnaildata":"imagedata";
-
-    return _.map(imgs,(x:string)=>{
-        return `/${imageType}/${targetPath}/${x}`;
-    });
-}
-
-export function getImagesInPath2(imageDataPath:string,targetPath:string):string[]
-{
-    var targetItemNames:string[]=[];
-
-    try
-    {
-        targetItemNames=fs.readdirSync(join(imageDataPath,targetPath));
-    }
-
-    catch (err)
-    {
-        return [];
-    }
-
-    var dirTargetPaths:string[]=[]; //array of target paths of all dirs in the target path
-    var imgNames:string[]=_.filter(targetItemNames,(x:string)=>{
-        if (fs.statSync(join(imageDataPath,targetPath,x)).isDirectory())
-        {
-            dirTargetPaths.push(normalize(posix.join(targetPath,x)));
-            return false;
-        }
-
-        return true;
-    });
-
-    // converting all images to final abstract path
-    imgNames=_.map(imgNames,(x:string)=>{
-        return normalize(`/imagedata/${targetPath}/${x}`);
-    });
-
-    // img results from subdirs
-    var subDirResults:string[][]=_.map(dirTargetPaths,(x:string)=>{
-        return getImagesInPath2(imageDataPath,x);
-    });
-
-    return _.flatten(_.shuffle([...subDirResults,imgNames]));
+    return _.flatten(getImagesInPath2(imageDataPath,targetPath));
 }
 
 // generate thumbnails for the target path into the thumbnail data folder
@@ -125,5 +71,67 @@ export async function generateThumbnailsForPath(imageDataPath:string,thumbnailDa
         } as any).then((thumbnail:Buffer)=>{
             fs.writeFile(thumbnailResult[i],thumbnail,()=>{});
         });
+    });
+}
+
+// given the image data path, and a target path, get the image urls for each lowest level
+// album at the target path.
+function getImagesInPath2(imageDataPath:string,targetPath:string):string[][]
+{
+    var targetItemNames:string[]=[];
+
+    try
+    {
+        targetItemNames=fs.readdirSync(join(imageDataPath,targetPath));
+    }
+
+    catch (err)
+    {
+        return [];
+    }
+
+    var dirTargetPaths:string[]=[]; //array of target paths of all dirs in the target path
+    var imgNames:string[]=_.filter(targetItemNames,(x:string)=>{
+        if (fs.statSync(join(imageDataPath,targetPath,x)).isDirectory())
+        {
+            dirTargetPaths.push(normalize(posix.join(targetPath,x)));
+            return false;
+        }
+
+        return true;
+    });
+
+    // converting all images to final abstract path
+    imgNames=_.map(imgNames,(x:string)=>{
+        return normalize(`/imagedata/${targetPath}/${x}`);
+    });
+
+    // img results from subdirs
+    var subDirResults:string[][]=_.flatten(_.map(dirTargetPaths,(x:string)=>{
+        return getImagesInPath2(imageDataPath,x);
+    }));
+
+    return _.shuffle([...subDirResults,imgNames]);
+}
+
+// given an album path within imagedata, return the urls for that path.
+function DEP_getImagesInPath(imageDataPath:string,targetPath:string,thumbnails?:boolean):string[]
+{
+    var imgs:string[];
+
+    try
+    {
+        imgs=fs.readdirSync(join(imageDataPath,targetPath));
+    }
+
+    catch (err)
+    {
+        return [];
+    }
+
+    var imageType:string=thumbnails?"thumbnaildata":"imagedata";
+
+    return _.map(imgs,(x:string)=>{
+        return `/${imageType}/${targetPath}/${x}`;
     });
 }
