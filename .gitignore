@@ -6,3 +6,5 @@ node-build
 
 imagedata
 thumbnaildata
+
+*.lnk
