@@ -44,6 +44,7 @@
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
     "serve-index": "^1.9.1",
+    "video-thumbnail-generator": "^1.1.3",
     "viewerjs": "1.6.0"
   }
 }

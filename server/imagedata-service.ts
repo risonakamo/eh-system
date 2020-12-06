@@ -1,8 +1,9 @@
 import fs from "fs-extra";
 import _ from "lodash";
-import {join,posix} from "path";
+import {join,posix,extname} from "path";
 import normalize from "normalize-path";
 import imageThumbnail from "image-thumbnail";
+import videoThumbnail from "video-thumbnail-generator";
 
 // return image urls at target path.
 export function getImagesInPath2Flat(imageDataPath:string,targetPath:string):string[]
@@ -63,6 +64,17 @@ export async function generateThumbnailsForPath(imageDataPath:string,thumbnailDa
 
     // generate thumbnails for each image asynchronously
     imgs.forEach((x:string,i:number)=>{
+        var extension:string=extname(x);
+
+        if (extension==".mp4")
+        {
+            // new videoThumbnail({
+            //     sourcePath:x,
+            //     thumbnailPath:thumbnailResult[i]
+            // }).generateGif();
+            return;
+        }
+
         imageThumbnail(x,{
             width:180,
             height:180,
