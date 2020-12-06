@@ -34,6 +34,11 @@ export function getAlbumInfo(imageDataPath:string,targetPath:string):AlbumInfo[]
 
         var imagesAtDir:string[]=getImagesInPath2Flat(imageDataPath,join(targetPath,x));
 
+        if (!imagesAtDir.length)
+        {
+            return null;
+        }
+
         return {
             title:x,
             items:imagesAtDir.length,
