@@ -5,7 +5,7 @@ import moment from "moment";
 import normalize from "normalize-path";
 import {isDirectorySync} from "path-type";
 
-import {getImagesInPath2Flat} from "./imagedata-service";
+import {getImagesInPath2Flat,videoPathToImagePath} from "./imagedata-service";
 
 // given a target album path within the imagedata folder, return album information for items
 // in that folder.
@@ -43,7 +43,11 @@ export function getAlbumInfo(imageDataPath:string,targetPath:string):AlbumInfo[]
             title:x,
             items:imagesAtDir.length,
             immediateItems:fs.readdirSync(fullitempath).length,
-            img:normalize(_.sample(imagesAtDir) as string).replace("imagedata","thumbnaildata"),
+            img:normalize(
+                videoPathToImagePath(
+                    _.sample(imagesAtDir)!.replace("imagedata","thumbnaildata")
+                )
+            ),
             date:moment(fs.statSync(fullitempath).mtime).format("YYYY/MM/DD"),
             album:pathHasNoSubDirs(fullitempath)
         };

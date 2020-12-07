@@ -83,6 +83,13 @@ export async function generateThumbnailsForPath(imageDataPath:string,thumbnailDa
     });
 }
 
+/**convert a path to a video to a png image instead. thumbnails of videos will always have
+ * png thumbnails.*/
+export function videoPathToImagePath(target:string):string
+{
+    return target.replace(/mp4/,"png");
+}
+
 // given the image data path, and a target path, get the image urls for each lowest level
 // album at the target path.
 function getImagesInPath2(imageDataPath:string,targetPath:string):string[][]
@@ -156,11 +163,4 @@ function generateVideoThumbnail(targetPath:string,outputDir:string):void
         count:1,
         filename:videoPathToImagePath(basename(targetPath))
     });
-}
-
-/**convert a path to a video to a png image instead. thumbnails of videos will always have
- * png thumbnails.*/
-function videoPathToImagePath(target:string):string
-{
-    return target.replace(/mp4/,"png");
 }
