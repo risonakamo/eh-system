@@ -6,6 +6,7 @@ import Viewer from "viewerjs";
 import cx from "classnames";
 
 import PreviewPanel from "./components/previewpanel/previewpanel";
+import VideoView,{isVideo} from "./components/video-view/videoview";
 
 import "./ehviewer-index.less";
 import "viewerjs/dist/viewer.css";
@@ -312,11 +313,7 @@ class EhViewerMain extends React.Component
           })}
         </ul>
 
-        <div className="video-zone">
-          <video muted controls autoPlay loop>
-            <source src="/imagedata/creeen/bea/6.mp4"/>
-          </video>
-        </div>
+        <VideoView src={this.state.currentImage?.link}/>
       </div>
 
       <PreviewPanel thumbnails={this.thumbnails} currentImageIndex={this.state.currentImageIndex}
@@ -339,12 +336,6 @@ async function requestAlbum(path:string):Promise<string[]>
 function setTitle(albumpath:string):void
 {
   document.title=_.last(albumpath.split("/")) as string;
-}
-
-/**determine if a link is a link to a video and not an image*/
-function isVideo(link:string):boolean
-{
-  return /\.mp4/.test(link);
 }
 
 // --- main wrapper ---
