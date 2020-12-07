@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import {BrowserRouter as Router,Switch,Route} from "react-router-dom";
 import _ from "lodash";
 import Viewer from "viewerjs";
+import cx from "classnames";
 
 import PreviewPanel from "./components/previewpanel/previewpanel";
 
@@ -292,14 +293,30 @@ class EhViewerMain extends React.Component
       this.theviewer.view(this.state.currentImageIndex);
     }
 
-    var mouseHideClass:string=this.state.mouseHidden?"mouse-hide":"";
+    var videoMode:boolean=false;
+    if (this.state.currentImage && isVideo(this.state.currentImage.link))
+    {
+      videoMode=true;
+    }
+
+    const viewerClasses={
+      "mouse-hide":this.state.mouseHidden,
+      "video-mode":videoMode
+    };
+
     return <>
-      <div className={`the-viewer ${mouseHideClass}`}>
+      <div className={cx("the-viewer",viewerClasses)}>
         <ul ref={this.theviewerElement}>
           {_.map(this.state.imgs,(x:ImageObject,i:number)=>{
             return <li key={i}><img src={x.link} loading="lazy"/></li>;
           })}
         </ul>
+
+        <div className="video-zone">
+          <video muted controls autoPlay loop>
+            <source src="/imagedata/creeen/bea/6.mp4"/>
+          </video>
+        </div>
       </div>
 
       <PreviewPanel thumbnails={this.thumbnails} currentImageIndex={this.state.currentImageIndex}
@@ -322,6 +339,12 @@ async function requestAlbum(path:string):Promise<string[]>
 function setTitle(albumpath:string):void
 {
   document.title=_.last(albumpath.split("/")) as string;
+}
+
+/**determine if a link is a link to a video and not an image*/
+function isVideo(link:string):boolean
+{
+  return /\.mp4/.test(link);
 }
 
 // --- main wrapper ---
