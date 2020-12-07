@@ -309,7 +309,14 @@ class EhViewerMain extends React.Component
       <div className={cx("the-viewer",viewerClasses)}>
         <ul ref={this.theviewerElement}>
           {_.map(this.state.imgs,(x:ImageObject,i:number)=>{
-            return <li key={i}><img src={x.link} loading="lazy"/></li>;
+            var link:string=x.link;
+
+            if (isVideo(link))
+            {
+              link="";
+            }
+
+            return <li key={i}><img src={link} loading="lazy"/></li>;
           })}
         </ul>
 
