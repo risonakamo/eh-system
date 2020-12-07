@@ -1,6 +1,6 @@
 import fs from "fs-extra";
 import _ from "lodash";
-import {join,posix,extname} from "path";
+import {join,posix,extname,dirname,basename} from "path";
 import normalize from "normalize-path";
 import imageThumbnail from "image-thumbnail";
 import videoThumbnail from "video-thumbnail-generator";
@@ -68,10 +68,7 @@ export async function generateThumbnailsForPath(imageDataPath:string,thumbnailDa
 
         if (extension==".mp4")
         {
-            // new videoThumbnail({
-            //     sourcePath:x,
-            //     thumbnailPath:thumbnailResult[i]
-            // }).generateGif();
+            generateVideoThumbnail(x,dirname(thumbnailResult[i]));
             return;
         }
 
@@ -146,4 +143,24 @@ function DEP_getImagesInPath(imageDataPath:string,targetPath:string,thumbnails?:
     return _.map(imgs,(x:string)=>{
         return `/${imageType}/${targetPath}/${x}`;
     });
+}
+
+/**generate video thumbnail for path to video and given output folder*/
+function generateVideoThumbnail(targetPath:string,outputDir:string):void
+{
+    new videoThumbnail({
+        sourcePath:targetPath,
+        thumbnailPath:outputDir
+    }).generate({
+        size:"180x180",
+        count:1,
+        filename:videoPathToImagePath(basename(targetPath))
+    });
+}
+
+/**convert a path to a video to a png image instead. thumbnails of videos will always have
+ * png thumbnails.*/
+function videoPathToImagePath(target:string):string
+{
+    return target.replace(/mp4/,"png");
 }
