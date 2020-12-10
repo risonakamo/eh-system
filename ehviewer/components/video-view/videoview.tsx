@@ -40,5 +40,5 @@ export default function VideoView(props:VideoViewProps):JSX.Element|null
 /**determine if a link is a link to a video and not an image*/
 export function isVideo(link:string):boolean
 {
-  return /\.mp4/.test(link);
+  return /\.mp4|\.webm/.test(link);
 }

@@ -274,7 +274,7 @@ class EhViewerMain extends React.Component
       var match=x.match(/\/imagedata(.*)/);
       if (match && match[1])
       {
-        return `/thumbnaildata/${match[1]}`.replace("mp4","png");
+        return `/thumbnaildata/${match[1]}`.replace(/mp4|webm/,"png");
       }
 
       return "";

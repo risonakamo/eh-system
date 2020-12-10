@@ -66,7 +66,7 @@ export async function generateThumbnailsForPath(imageDataPath:string,thumbnailDa
     imgs.forEach((x:string,i:number)=>{
         var extension:string=extname(x);
 
-        if (extension==".mp4")
+        if (extension==".mp4" || extension==".webm")
         {
             generateVideoThumbnail(x,dirname(thumbnailResult[i]));
             return;
@@ -87,7 +87,7 @@ export async function generateThumbnailsForPath(imageDataPath:string,thumbnailDa
  * png thumbnails.*/
 export function videoPathToImagePath(target:string):string
 {
-    return target.replace(/mp4/,"png");
+    return target.replace(/\.mp4|\.webm/,".png");
 }
 
 // given the image data path, and a target path, get the image urls for each lowest level
