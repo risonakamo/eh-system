@@ -3,6 +3,7 @@
   "version": "1.2.0",
   "scripts": {
     "build": "webpack",
+    "build-prod":"webpack --env prod",
     "watch": "webpack --watch",
     "server": "tsc --project tsconfig-node.json && node node-build/server",
     "server-run": "node node-build/server"

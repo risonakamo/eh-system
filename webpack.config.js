@@ -3,63 +3,69 @@ const ForkTsCheckerWebpackPlugin=require("fork-ts-checker-webpack-plugin");
 // const CopyPlugin=require("copy-webpack-plugin");
 const WebpackBar=require("webpackbar");
 
-module.exports={
-    mode:"development",
-    entry:{
-        ehviewer:"./ehviewer/ehviewer-index.tsx",
-        abexplore:"./albumexplore/abexplore-router.tsx"
-    },
-    output:{
-        path:`${__dirname}/build`,
-        filename:"[name]-build.js"
-    },
+module.exports=(env)=>{
+    env=env || {};
 
-    module:{
-        rules:[
-            {
-                test:/\.(tsx|ts|js|jsx)$/,
-                exclude:/node_modules/,
-                use:{
-                    loader:"babel-loader",
-                    options:{
-                        presets:["@babel/preset-react","@babel/preset-typescript"]
+    var mode=env.prod?"production":"development";
+
+    return {
+        mode,
+        entry:{
+            ehviewer:"./ehviewer/ehviewer-index.tsx",
+            abexplore:"./albumexplore/abexplore-router.tsx"
+        },
+        output:{
+            path:`${__dirname}/build`,
+            filename:"[name]-build.js"
+        },
+
+        module:{
+            rules:[
+                {
+                    test:/\.(tsx|ts|js|jsx)$/,
+                    exclude:/node_modules/,
+                    use:{
+                        loader:"babel-loader",
+                        options:{
+                            presets:["@babel/preset-react","@babel/preset-typescript"]
+                        }
                     }
+                },
+                {
+                    test:/\.(less|css)$/,
+                    use:[
+                        MiniCssExtractPlugin.loader,
+                        {loader:"css-loader",options:{url:false}},
+                        {loader:"less-loader"}
+                    ]
                 }
-            },
-            {
-                test:/\.(less|css)$/,
-                use:[
-                    MiniCssExtractPlugin.loader,
-                    {loader:"css-loader",options:{url:false}},
-                    {loader:"less-loader"}
-                ]
-            }
-        ]
-    },
+            ]
+        },
 
-    plugins:[
-        new MiniCssExtractPlugin({
-            filename:"[name]-build.css"
-        }),
+        plugins:[
+            new MiniCssExtractPlugin({
+                filename:"[name]-build.css"
+            }),
 
-        new ForkTsCheckerWebpackPlugin(),
-        new WebpackBar()
+            new ForkTsCheckerWebpackPlugin(),
+            new WebpackBar()
 
-        // new CopyPlugin([
-        //     {from:"src/index.html",to:"../"}
-        // ]),
-    ],
+            // new CopyPlugin([
+            //     {from:"src/index.html",to:"../"}
+            // ]),
+        ],
 
-    resolve:{
-        extensions:[".tsx",".ts",".jsx",".js"]
-    },
+        resolve:{
+            extensions:[".tsx",".ts",".jsx",".js"]
+        },
 
-    stats:{
-        entrypoints:false,
-        modules:false,
-        chunks:false,
-        assets:false
-    },
+        stats:{
+            entrypoints:false,
+            modules:false,
+            chunks:false,
+            assets:false
+        },
 
-    devtool:"eval-source-map"
+        devtool:"eval-source-map"
+    };
 };
