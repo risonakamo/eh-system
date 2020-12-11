@@ -268,7 +268,9 @@ class EhViewerMain extends React.Component
       };
     });
 
-    this.setState({imgs});
+    this.setState({imgs},()=>{
+      this.navigateImage(0);
+    });
 
     this.thumbnails=_.map(urls,(x:string)=>{
       var match=x.match(/\/imagedata(.*)/);
