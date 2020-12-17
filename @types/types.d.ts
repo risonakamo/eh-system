@@ -21,3 +21,13 @@ interface ItemCountColour
     color:string
     backgroundColor:string
 }
+
+interface ServerArgsFlags
+{
+    path:{
+        type:"string"
+        default:string
+    }
+}
+
+type ServerArgs=import("meow").Result<ServerArgsFlags>
