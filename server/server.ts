@@ -78,10 +78,10 @@ function getArgs():ServerArgs
             // path to image data dir
             path:{
                 type:"string",
-                default:"../../../h"
+                default:"../../../h/cg"
             }
         },
-        help:`--path: specify path to target image data directory, relative to the eh-system folder`
+        help:`--path: specify path to target image data directory, relative to the eh-system build folder`
     });
 }
 

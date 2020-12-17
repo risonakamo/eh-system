@@ -1,1 +1,1 @@
-npm run server-run
+npm run server-run -- --path ../../../h/cg
