@@ -159,7 +159,7 @@ function generateVideoThumbnail(targetPath:string,outputDir:string):void
         sourcePath:targetPath,
         thumbnailPath:outputDir
     }).generate({
-        size:"180x180",
+        size:"200x?",
         count:1,
         filename:videoPathToImagePath(basename(targetPath))
     });
