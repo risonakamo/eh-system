@@ -9,6 +9,7 @@
     },
     "include":[
         "server/*.ts",
+        "thumbnail-manager/*.ts",
         "**/*.d.ts"
     ],
     "exclude":[
