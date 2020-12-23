@@ -2,8 +2,9 @@ import recursiveDir from "recursive-readdir";
 import normalise from "normalize-path";
 import _ from "lodash";
 import replaceExt from "replace-ext";
-import {join,dirname,extname} from "path";
+import {join,dirname,extname,basename} from "path";
 import imageThumbnail from "image-thumbnail";
+import videoThumbnail from "video-thumbnail-generator";
 import {ensureDirSync,writeFile} from "fs-extra";
 
 // PATHS SHOULD BE RELATIVE TO THE CURRENT DIRECTORY EXECUTING THE FILE FROM, NOT WHERE THIS FILE IS LOCATED
@@ -16,8 +17,13 @@ async function main():Promise<void>
     var paths:string[]=await getDirItems(_imageDataDir);
     var jobs:ThumbnailGenJob[]=resolveThumbnailJobs(_imageDataDir,_thumbnailDataDir,paths);
 
-    console.log(jobs[0]);
     generateImageThumbnail(jobs[0].fullPath,jobs[0].thumbnailPath);
+
+    console.log(jobs[22]);
+    generateVideoThumbnail(jobs[22].fullPath,jobs[22].thumbnailPath);
+
+    console.log(jobs[21]);
+    generateVideoThumbnail(jobs[21].fullPath,jobs[21].thumbnailPath);
 }
 
 /** return path of files, relative to the intially given target path */
@@ -73,6 +79,21 @@ async function generateImageThumbnail(path:string,outputPath:string):Promise<voi
         {
             console.log("image thumbnail generate write err",err);
         }
+    });
+}
+
+/** async generate thumbnail for a full path to a video. give full path to the output, including extension.*/
+async function generateVideoThumbnail(target:string,outputPath:string):Promise<void>
+{
+    ensureDirSync(dirname(outputPath));
+
+    await new videoThumbnail({
+        sourcePath:target,
+        thumbnailPath:dirname(outputPath)
+    }).generate({
+        size:"200x?",
+        count:1,
+        filename:basename(outputPath)
     });
 }
 
