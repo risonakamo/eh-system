@@ -3,6 +3,7 @@ import videoThumbnail from "video-thumbnail-generator";
 import {ensureDirSync,writeFile} from "fs-extra";
 import {basename,dirname,extname} from "path";
 import _ from "lodash";
+import chalk from "chalk";
 
 /** generate thumbnails for an array of thumbnail gen jobs, in chunks. */
 export async function generateThumbnails(jobs:ThumbnailGenJob[],chunks:number=5):Promise<void>
@@ -11,6 +12,7 @@ export async function generateThumbnails(jobs:ThumbnailGenJob[],chunks:number=5)
 
     for (var x=0,l=chunkJobs.length;x<l;x++)
     {
+        console.log(`${chalk.yellow("progress")} ${x+1}/${chunkJobs.length}:`);
         await generateThumbnailsNoChunk(chunkJobs[x]);
         console.log();
     }
@@ -20,7 +22,7 @@ export async function generateThumbnails(jobs:ThumbnailGenJob[],chunks:number=5)
 async function generateThumbnailsNoChunk(jobs:ThumbnailGenJob[]):Promise<void[]>
 {
     return Promise.all(_.map(jobs,(x:ThumbnailGenJob)=>{
-        console.log("generating",x.fullPath);
+        console.log(chalk.green("generating"),x.fullPath);
 
         if (isVideoExt(x.originalExt))
         {
