@@ -4,7 +4,7 @@ import _ from "lodash";
 import replaceExt from "replace-ext";
 import {join,dirname,extname} from "path";
 
-import {generateVideoThumbnail,generateImageThumbnail} from "./thumbnail-generators";
+import {generateThumbnails} from "./thumbnail-generators";
 
 // PATHS SHOULD BE RELATIVE TO THE CURRENT DIRECTORY EXECUTING THE FILE FROM, NOT WHERE THIS FILE IS LOCATED
 const _imageDataDir:string="../../h/cg/grimgrim";
@@ -16,14 +16,7 @@ async function main():Promise<void>
     var paths:string[]=await getDirItems(_imageDataDir);
     var jobs:ThumbnailGenJob[]=resolveThumbnailJobs(_imageDataDir,_thumbnailDataDir,paths);
 
-    generateImageThumbnail(jobs[0].fullPath,jobs[0].thumbnailPath);
-
-    console.log(jobs[22]);
-    generateVideoThumbnail(jobs[22].fullPath,jobs[22].thumbnailPath);
-
-    console.log(jobs[21]);
-    generateVideoThumbnail(jobs[21].fullPath,jobs[21].thumbnailPath);
-    generateVideoThumbnail(jobs[0].fullPath,jobs[0].thumbnailPath);
+    generateThumbnails(jobs);
 }
 
 /** return path of files, relative to the intially given target path */

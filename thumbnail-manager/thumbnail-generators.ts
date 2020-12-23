@@ -2,12 +2,40 @@ import imageThumbnail from "image-thumbnail";
 import videoThumbnail from "video-thumbnail-generator";
 import {ensureDirSync,writeFile} from "fs-extra";
 import {basename,dirname,extname} from "path";
+import _ from "lodash";
+
+/** generate thumbnails for an array of thumbnail gen jobs, in chunks. */
+export async function generateThumbnails(jobs:ThumbnailGenJob[],chunks:number=5):Promise<void>
+{
+    var chunkJobs:ThumbnailGenJob[][]=_.chunk(jobs,chunks);
+
+    for (var x=0,l=chunkJobs.length;x<l;x++)
+    {
+        await generateThumbnailsNoChunk(chunkJobs[x]);
+        console.log();
+    }
+}
+
+/** generate thumbnails for array of thumbnail gen jobs, without chunking */
+async function generateThumbnailsNoChunk(jobs:ThumbnailGenJob[]):Promise<void[]>
+{
+    return Promise.all(_.map(jobs,(x:ThumbnailGenJob)=>{
+        console.log("generating",x.fullPath);
+
+        if (isVideoExt(x.originalExt))
+        {
+            return generateVideoThumbnail(x.fullPath,x.thumbnailPath);
+        }
+
+        return generateImageThumbnail(x.fullPath,x.thumbnailPath);
+    }));
+}
 
 /** async generate thumbnail for given full path to an image. give it the FULL PATH to the output,
  *  including the file extension
  *  - path: full path to the image from the cwd
  *  - outputPath: path to the output image, as a jpg, from the cwd*/
-export async function generateImageThumbnail(path:string,outputPath:string):Promise<void>
+async function generateImageThumbnail(path:string,outputPath:string):Promise<void>
 {
     if (isVideo(path))
     {
@@ -37,7 +65,7 @@ export async function generateImageThumbnail(path:string,outputPath:string):Prom
 }
 
 /** async generate thumbnail for a full path to a video. give full path to the output, including extension.*/
-export async function generateVideoThumbnail(target:string,outputPath:string):Promise<void>
+async function generateVideoThumbnail(target:string,outputPath:string):Promise<void>
 {
     if (!isVideo(target))
     {
@@ -58,9 +86,13 @@ export async function generateVideoThumbnail(target:string,outputPath:string):Pr
 }
 
 /** determine if given path is a video or not */
-function isVideo(path:string):boolean
+function isVideo(path:string,noExtract:boolean=false):boolean
 {
-    var ext:string=extname(path);
+    return isVideoExt(extname(path));
+}
 
+/** determine if an extension only is a video or not */
+function isVideoExt(ext:string):boolean
+{
     return ext==".mp4" || ext==".webm";
 }
