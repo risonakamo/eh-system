@@ -4,7 +4,7 @@ import _ from "lodash";
 import replaceExt from "replace-ext";
 import {join,dirname,extname} from "path";
 
-import {generateVideoThumbnail,generateImageThumbnail} from "./generators";
+import {generateVideoThumbnail,generateImageThumbnail} from "./thumbnail-generators";
 
 // PATHS SHOULD BE RELATIVE TO THE CURRENT DIRECTORY EXECUTING THE FILE FROM, NOT WHERE THIS FILE IS LOCATED
 const _imageDataDir:string="../../h/cg/grimgrim";
