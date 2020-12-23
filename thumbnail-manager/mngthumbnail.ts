@@ -23,6 +23,7 @@ async function main():Promise<void>
 
     console.log(jobs[21]);
     generateVideoThumbnail(jobs[21].fullPath,jobs[21].thumbnailPath);
+    generateVideoThumbnail(jobs[0].fullPath,jobs[0].thumbnailPath);
 }
 
 /** return path of files, relative to the intially given target path */

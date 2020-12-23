@@ -1,7 +1,7 @@
 import imageThumbnail from "image-thumbnail";
 import videoThumbnail from "video-thumbnail-generator";
 import {ensureDirSync,writeFile} from "fs-extra";
-import {basename,dirname} from "path";
+import {basename,dirname,extname} from "path";
 
 /** async generate thumbnail for given full path to an image. give it the FULL PATH to the output,
  *  including the file extension
@@ -9,6 +9,12 @@ import {basename,dirname} from "path";
  *  - outputPath: path to the output image, as a jpg, from the cwd*/
 export async function generateImageThumbnail(path:string,outputPath:string):Promise<void>
 {
+    if (isVideo(path))
+    {
+        console.error("attempted to generate image thumbnail on video");
+        return;
+    }
+
     var thumbnail:Buffer=await imageThumbnail(path,{
         width:180,
         height:180,
@@ -25,7 +31,7 @@ export async function generateImageThumbnail(path:string,outputPath:string):Prom
     writeFile(outputPath,thumbnail,(err:NodeJS.ErrnoException)=>{
         if (err)
         {
-            console.log("image thumbnail generate write err",err);
+            console.error("image thumbnail generate write err",err);
         }
     });
 }
@@ -33,6 +39,12 @@ export async function generateImageThumbnail(path:string,outputPath:string):Prom
 /** async generate thumbnail for a full path to a video. give full path to the output, including extension.*/
 export async function generateVideoThumbnail(target:string,outputPath:string):Promise<void>
 {
+    if (!isVideo(target))
+    {
+        console.error("attempted to generate video thumbnail on non-video");
+        return;
+    }
+
     ensureDirSync(dirname(outputPath));
 
     await new videoThumbnail({
@@ -43,4 +55,12 @@ export async function generateVideoThumbnail(target:string,outputPath:string):Pr
         count:1,
         filename:basename(outputPath)
     });
+}
+
+/** determine if given path is a video or not */
+function isVideo(path:string):boolean
+{
+    var ext:string=extname(path);
+
+    return ext==".mp4" || ext==".webm";
 }
