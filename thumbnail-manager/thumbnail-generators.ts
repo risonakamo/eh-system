@@ -41,7 +41,7 @@ async function generateImageThumbnail(path:string,outputPath:string):Promise<voi
 {
     if (isVideo(path))
     {
-        console.error("attempted to generate image thumbnail on video");
+        console.error(chalk.red("attempted to generate image thumbnail on video"));
         return;
     }
 
@@ -61,7 +61,7 @@ async function generateImageThumbnail(path:string,outputPath:string):Promise<voi
     writeFile(outputPath,thumbnail,(err:NodeJS.ErrnoException)=>{
         if (err)
         {
-            console.error("image thumbnail generate write err",err);
+            console.error(chalk.red("image thumbnail generate write err"),err);
         }
     });
 }
@@ -71,20 +71,29 @@ async function generateVideoThumbnail(target:string,outputPath:string):Promise<v
 {
     if (!isVideo(target))
     {
-        console.error("attempted to generate video thumbnail on non-video");
+        console.error(chalk.red("attempted to generate video thumbnail on non-video"));
         return;
     }
 
     ensureDirSync(dirname(outputPath));
 
-    await new videoThumbnail({
-        sourcePath:target,
-        thumbnailPath:dirname(outputPath)
-    }).generate({
-        size:"200x?",
-        count:1,
-        filename:basename(outputPath)
-    });
+    try
+    {
+        await new videoThumbnail({
+            sourcePath:target,
+            thumbnailPath:dirname(outputPath)
+        }).generate({
+            size:"200x?",
+            count:1,
+            filename:basename(outputPath)
+        });
+    }
+
+    catch (err)
+    {
+        console.log(chalk.red("possible video thumbnail generate error"));
+        console.log(err);
+    }
 }
 
 /** determine if given path is a video or not */

@@ -7,16 +7,16 @@ import {join,dirname,extname} from "path";
 import {generateThumbnails} from "./thumbnail-generators";
 
 // PATHS SHOULD BE RELATIVE TO THE CURRENT DIRECTORY EXECUTING THE FILE FROM, NOT WHERE THIS FILE IS LOCATED
-const _imageDataDir:string="../../h/3d";
-const _thumbnailDataDir:string="thumbnaildata2";
-const _batchSize:number=5;
+const _imageDataDir:string="../../h/3d/noname/honoka";
+const _thumbnailDataDir:string="thumbnaildata2/noname/honoka";
+const _batchSize:number=6;
 
 async function main():Promise<void>
 {
     var paths:string[]=await getDirItems(_imageDataDir);
     var jobs:ThumbnailGenJob[]=resolveThumbnailJobs(_imageDataDir,_thumbnailDataDir,paths);
 
-    generateThumbnails(jobs);
+    generateThumbnails(jobs,_batchSize);
 }
 
 /** return path of files, relative to the intially given target path */
