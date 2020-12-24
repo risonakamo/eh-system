@@ -92,7 +92,7 @@ async function generateVideoThumbnail(target:string,outputPath:string):Promise<v
     catch (err)
     {
         console.log(chalk.red("possible video thumbnail generate error"));
-        console.log(err);
+        console.log(chalk.red(">   "),chalk.red(target));
     }
 }
 
