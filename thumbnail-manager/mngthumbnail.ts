@@ -3,6 +3,9 @@ import normalise from "normalize-path";
 import _ from "lodash";
 import replaceExt from "replace-ext";
 import {join,dirname,extname} from "path";
+import prompts from "prompts";
+import chalk from "chalk";
+import del from "del";
 
 import {generateThumbnails} from "./thumbnail-generators";
 
@@ -14,12 +17,13 @@ const _batchSize:number=6;
 
 async function main():Promise<void>
 {
-    var imagedir:string=join(_imageDataDir,_targetDir);
-    var thumbnaildir:string=join(_thumbnailDataDir,_targetDir);
+    var imagedir:string=njoin(_imageDataDir,_targetDir);
+    var thumbnaildir:string=njoin(_thumbnailDataDir,_targetDir);
 
     var paths:string[]=await getDirItems(imagedir);
     var jobs:ThumbnailGenJob[]=resolveThumbnailJobs(imagedir,thumbnaildir,paths);
 
+    await clearDir(thumbnaildir);
     generateThumbnails(jobs,_batchSize);
 }
 
@@ -56,6 +60,25 @@ function resolveThumbnailJobs(basepath:string,thumbnaildir:string,relpaths:strin
 function njoin(...paths:string[]):string
 {
     return normalise(join(...paths));
+}
+
+/** clear the target folder, after prompting to clear or not */
+async function clearDir(target:string):Promise<void>
+{
+    var response=await prompts({
+        type:"confirm",
+        name:"doDelete",
+        message:`confirm clear ${chalk.green(target)}`
+    });
+
+    if (!response.doDelete)
+    {
+        console.log(chalk.red("not deleting"));
+        return;
+    }
+
+    del.sync(njoin(target,"*"));
+    console.log(`cleared ${chalk.red(target)}`);
 }
 
 main();
