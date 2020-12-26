@@ -13,21 +13,31 @@ interface PreviewThumbnailProps
 export default class PreviewThumbnail extends React.Component
 {
   props:PreviewThumbnailProps
+  element:RefObject<HTMLAnchorElement>
 
   constructor(props:PreviewThumbnailProps)
   {
     super(props);
     this.navigateAction=this.navigateAction.bind(this);
     this.closePanelAction=this.closePanelAction.bind(this);
+    this.element=React.createRef();
+  }
+
+  /** scroll this thumbnail element into view */
+  public scrollIntoView():void
+  {
+    this.element.current?.scrollIntoView({
+      block:"center"
+    });
   }
 
   // click action, use navigate image
-  navigateAction()
+  private navigateAction()
   {
     this.props.navigateImage(this.props.indexNumber);
   }
 
-  closePanelAction()
+  private closePanelAction()
   {
     this.props.togglePanelShowing();
   }
@@ -35,7 +45,7 @@ export default class PreviewThumbnail extends React.Component
   render()
   {
     return <a className={`thumbnail ${this.props.selected?"selected":""}`} onClick={this.navigateAction}
-      onDoubleClick={this.closePanelAction}>
+      onDoubleClick={this.closePanelAction} ref={this.element}>
       <img src={this.props.thumbnailurl}/>
       <div className="select-border"></div>
     </a>;

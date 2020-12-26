@@ -18,14 +18,36 @@ interface PreviewPanelProps
 export default class PreviewPanel extends React.PureComponent
 {
   props:PreviewPanelProps
+  currentThumbnail:RefObject<PreviewThumbnail>
+
+  constructor(props:PreviewPanelProps)
+  {
+    super(props);
+
+    this.currentThumbnail=React.createRef();
+  }
+
+  componentDidUpdate(prevProps:PreviewPanelProps):void
+  {
+    if (!prevProps.showing && this.props.showing)
+    {
+      this.currentThumbnail.current?.scrollIntoView();
+    }
+  }
 
   render()
   {
     var thumbnails=_.map(this.props.thumbnails,(x:string,i:number)=>{
       var selected=this.props.currentImageIndex==i?true:false;
 
+      var ref:RefObject<PreviewThumbnail>|undefined;
+      if (selected)
+      {
+        ref=this.currentThumbnail;
+      }
+
       return <PreviewThumbnail thumbnailurl={x} key={i} selected={selected}
-        indexNumber={i} navigateImage={this.props.navigateImage}
+        indexNumber={i} navigateImage={this.props.navigateImage} ref={ref}
         togglePanelShowing={this.props.togglePanelShowing}/>;
     });
 
