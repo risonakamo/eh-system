@@ -83,11 +83,10 @@ export async function generateThumbnailsForPath(imageDataPath:string,thumbnailDa
     });
 }
 
-/**convert a path to a video to a png image instead. thumbnails of videos will always have
- * png thumbnails.*/
+/**convert a path to a video to a jpg image instead.*/
 export function videoPathToImagePath(target:string):string
 {
-    return target.replace(/\.mp4|\.webm/,".png");
+    return target.replace(/\.mp4|\.webm/,".jpg");
 }
 
 // given the image data path, and a target path, get the image urls for each lowest level

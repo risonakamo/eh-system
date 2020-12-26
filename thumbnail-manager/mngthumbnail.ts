@@ -10,9 +10,9 @@ import del from "del";
 import {generateThumbnails} from "./thumbnail-generators";
 
 // PATHS SHOULD BE RELATIVE TO THE CURRENT DIRECTORY EXECUTING THE FILE FROM, NOT WHERE THIS FILE IS LOCATED
-const _imageDataDir:string="../../h/3d";
-const _thumbnailDataDir:string="thumbnaildata2";
-const _targetDir:string="noname"; //target dir from the base image data dir to generate thumbnails for.
+const _imageDataDir:string="../../h/cg";
+const _thumbnailDataDir:string="thumbnaildata";
+const _targetDir:string="/"; //target dir from the base image data dir to generate thumbnails for.
 const _batchSize:number=6;
 
 async function main():Promise<void>
