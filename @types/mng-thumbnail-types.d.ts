@@ -8,3 +8,10 @@ interface ThumbnailGenJob
 
     originalExt:string //original file extension
 }
+
+type MngThumbnailArgsMeow=import("meow").Result<any>
+
+interface MngThumbnailArgs
+{
+    targetDir:string
+}

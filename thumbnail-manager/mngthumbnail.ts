@@ -6,19 +6,21 @@ import {join,dirname,extname} from "path";
 import prompts from "prompts";
 import chalk from "chalk";
 import del from "del";
+import meow from "meow";
 
 import {generateThumbnails} from "./thumbnail-generators";
 
 // PATHS SHOULD BE RELATIVE TO THE CURRENT DIRECTORY EXECUTING THE FILE FROM, NOT WHERE THIS FILE IS LOCATED
 const _imageDataDir:string="../../h/cg";
 const _thumbnailDataDir:string="thumbnaildata";
-const _targetDir:string="/"; //target dir from the base image data dir to generate thumbnails for.
 const _batchSize:number=6;
 
 async function main():Promise<void>
 {
-    var imagedir:string=njoin(_imageDataDir,_targetDir);
-    var thumbnaildir:string=njoin(_thumbnailDataDir,_targetDir);
+    var args:MngThumbnailArgs=getArgs();
+
+    var imagedir:string=njoin(_imageDataDir,args.targetDir);
+    var thumbnaildir:string=njoin(_thumbnailDataDir,args.targetDir);
 
     var paths:string[]=await getDirItems(imagedir);
     var jobs:ThumbnailGenJob[]=resolveThumbnailJobs(imagedir,thumbnaildir,paths);
@@ -79,6 +81,25 @@ async function clearDir(target:string):Promise<void>
 
     del.sync(njoin(target,"*"));
     console.log(`cleared ${chalk.red(target)}`);
+}
+
+/** get mng thumbnail args */
+function getArgs():MngThumbnailArgs
+{
+    var args:MngThumbnailArgsMeow=meow(`
+        mng-thumbnails <TARGET-DIR>
+
+        TARGET-DIR: path to directory to regenerate thumbnails for, ${chalk.green("relative to the base image dir")}
+    `);
+
+    if (args.input.length!=1)
+    {
+        args.showHelp();
+    }
+
+    return {
+        targetDir:args.input[0]
+    };
 }
 
 main();
