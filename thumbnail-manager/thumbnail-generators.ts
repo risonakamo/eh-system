@@ -46,8 +46,8 @@ async function generateImageThumbnail(path:string,outputPath:string):Promise<voi
     }
 
     var thumbnail:Buffer=await imageThumbnail(path,{
-        width:180,
-        height:180,
+        width:160,
+        height:160,
         responseType:"buffer",
         jpegOptions:{
             force:true,
