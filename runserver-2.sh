@@ -1,1 +1,1 @@
-npm run server-run -- --path ../../../h/3d
+npm run server-run -- --path ../../../../h/3d
