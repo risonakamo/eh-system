@@ -6,7 +6,7 @@
     "build-prod": "webpack --env prod",
     "watch": "webpack --watch",
     "server": "npm run server-build && npm run server-run",
-    "server-run": "node node-build/server",
+    "server-run": "node node-build/server/server",
     "server-build": "tsc --project tsconfig-node.json",
     "mng-thumbnails": "npm run server-build && node node-build/thumbnail-manager/mngthumbnail"
   },

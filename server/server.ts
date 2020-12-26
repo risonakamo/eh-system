@@ -2,6 +2,7 @@ import express from "express";
 import serveIndex from "serve-index";
 import {join} from "path";
 import meow from "meow";
+import chalk from "chalk";
 
 import {generateThumbnailsForPath,getImagesInPath2Flat} from "./imagedata-service";
 import {getAlbumInfo} from "./album-service";
@@ -12,7 +13,7 @@ function main()
 
     // path to image data directory, relative to this server file.
     const imageDataDir:string=args.flags.path;
-    const thumbnailDataDir:string="../thumbnaildata";
+    const thumbnailDataDir:string="../../thumbnaildata";
 
     const fullImageDataDir:string=join(__dirname,imageDataDir);
     const fullThumbnailDataDir:string=join(__dirname,thumbnailDataDir);
@@ -21,22 +22,22 @@ function main()
 
     // --- static serving ---
     // eh viewer page
-    app.use("/viewer/*",express.static(`${__dirname}/../ehviewer`));
+    app.use("/viewer/*",express.static(`${__dirname}/../../ehviewer`));
 
     // album explore page
-    app.use("/albums*",express.static(`${__dirname}/../albumexplore`));
+    app.use("/albums*",express.static(`${__dirname}/../../albumexplore`));
     app.use("//",(req,res)=>{
         res.redirect("/albums");
     });
 
     // web page combined build folder
-    app.use("/build",express.static(`${__dirname}/../build`));
+    app.use("/build",express.static(`${__dirname}/../../build`));
 
     // fonts folder
-    app.use("/assets/fonts",express.static(`${__dirname}/../fonts`));
+    app.use("/assets/fonts",express.static(`${__dirname}/../../fonts`));
 
     // img assets folder
-    app.use("/assets/imgs",express.static(`${__dirname}/../imgs`));
+    app.use("/assets/imgs",express.static(`${__dirname}/../../imgs`));
 
     // image data directory
     app.use("/imagedata",express.static(fullImageDataDir));
@@ -67,7 +68,7 @@ function main()
     // --- end apis ---
 
     app.listen(80,()=>{
-        console.log("EH-SYSTEM started");
+        console.log(chalk.green("EH-SYSTEM started"));
     });
 }
 
@@ -78,7 +79,7 @@ function getArgs():ServerArgs
             // path to image data dir
             path:{
                 type:"string",
-                default:"../../../h/cg"
+                default:"../../../../h/cg"
             }
         },
         help:`--path: specify path to target image data directory, relative to the eh-system build folder`

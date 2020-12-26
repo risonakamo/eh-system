@@ -4,6 +4,7 @@ import {join,posix,extname,dirname,basename} from "path";
 import normalize from "normalize-path";
 import imageThumbnail from "image-thumbnail";
 import videoThumbnail from "video-thumbnail-generator";
+import replaceExt from "replace-ext";
 
 // return image urls at target path.
 export function getImagesInPath2Flat(imageDataPath:string,targetPath:string):string[]
@@ -83,10 +84,10 @@ export async function generateThumbnailsForPath(imageDataPath:string,thumbnailDa
     });
 }
 
-/**convert a path to a video to a jpg image instead.*/
-export function videoPathToImagePath(target:string):string
+/** attempt to convert a url to an image to a url to a thumbnail */
+export function imagePathToThumbnailPath(target:string):string
 {
-    return target.replace(/\.mp4|\.webm/,".jpg");
+    return normalize(replaceExt(target.replace("imagedata","thumbnaildata"),".jpg"));
 }
 
 // given the image data path, and a target path, get the image urls for each lowest level
@@ -160,6 +161,6 @@ function generateVideoThumbnail(targetPath:string,outputDir:string):void
     }).generate({
         size:"200x?",
         count:1,
-        filename:videoPathToImagePath(basename(targetPath))
+        filename:imagePathToThumbnailPath(basename(targetPath))
     });
 }
