@@ -10,7 +10,22 @@ a local album server for browsing and viewing folders of images, with shuffle me
 ```bash
 npm i
 npm run build
-npm run server
+npm run server-build
 ```
 
 after building, can use `runserver.bat` to launch the server.
+
+# npm commands
+## frontend
+- `watch`: (dev) watch
+- `build-dev`: (dev) build for dev
+- `build`: build for production
+
+## server
+- `server-run`: run the server
+- `server-build`: (dev) build the server
+- `server`: (dev) build and run the server
+
+## thumbnail management
+- `mng-thumbnails`: run mng thumbnails program
+- `mng-thumbnails-dev`: (dev) build and run mng thumbnails
