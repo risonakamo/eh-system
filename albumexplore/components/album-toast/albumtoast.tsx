@@ -39,7 +39,6 @@ export default class AlbumToast extends React.Component
       </div>
       <div className="menu-zone">
         <AMButton onClick={this.props.navigateRandom}/>
-        <AMButton/>
       </div>
     </div>;
   }
