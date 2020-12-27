@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import _ from "lodash";
 
 import SasButton from "../../../ehviewer/components/sas-button/sasbutton";
+import AMButton from "../album-menu-button/album-menu-button";
 
 import "./albumtoast.less";
 
@@ -36,7 +37,8 @@ export default class AlbumToast extends React.Component
         {this.generateToasts()}
       </div>
       <div className="menu-zone">
-        <a>something</a>
+        <AMButton/>
+        <AMButton/>
       </div>
     </div>;
   }
