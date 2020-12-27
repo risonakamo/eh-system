@@ -29,8 +29,15 @@ export default class AlbumToast extends React.Component
   render()
   {
     return <div className="album-toasts">
-      <SasButton href="/" className="home-icon" routerLink={true}/>
-      {this.generateToasts()}
+      <div className="icon-zone">
+        <SasButton href="/" className="home-icon" routerLink={true}/>
+      </div>
+      <div className="toast-zone">
+        {this.generateToasts()}
+      </div>
+      <div className="menu-zone">
+        <a>something</a>
+      </div>
     </div>;
   }
 }

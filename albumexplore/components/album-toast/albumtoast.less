@@ -1,37 +1,62 @@
 .album-toasts
 {
     // change later to reposition
-    padding: 8px 0 26px 12px;
+    // padding: 8px 0 26px 12px;
+    display: flex;
 
-    .single-toast
+    & > div
     {
-        font-weight: bold;
-        padding: 0 6px 0 6px;
-        opacity: .6;
-        cursor: pointer;
+        display: flex;
+        flex: 1;
+    }
 
-        &.active
-        {
-            opacity: .9;
-            cursor: default;
-        }
+    .icon-zone
+    {
+        flex: 0;
 
-        &:hover
+        .home-icon
         {
-            opacity: .9;
+            display: inline-block;
+            width: 50px;
+            height: 50px;
         }
     }
 
-    .toast-divider
+    .toast-zone
     {
-        opacity: .5;
-        font-weight: 100;
+        .single-toast
+        {
+            display: flex;
+            font-weight: bold;
+            padding: 0 6px 0 6px;
+            opacity: .6;
+            cursor: pointer;
+            align-items: center;
+
+            &.active
+            {
+                opacity: .9;
+                cursor: default;
+            }
+
+            &:hover
+            {
+                opacity: .9;
+            }
+        }
+
+        .toast-divider
+        {
+            display: flex;
+            opacity: .5;
+            font-weight: 100;
+            align-items: center;
+        }
     }
 
-    .home-icon
+    .menu-zone
     {
-        display: inline-block;
-        width: 50px;
-        height: 30px;
+        width: 80px;
+        flex: 0;
     }
 }
