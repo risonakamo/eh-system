@@ -10,6 +10,7 @@ import "./albumtoast.less";
 interface AlbumToastProps
 {
   targetPath:string
+  navigateRandom():void
 }
 
 export default class AlbumToast extends React.Component
@@ -37,7 +38,7 @@ export default class AlbumToast extends React.Component
         {this.generateToasts()}
       </div>
       <div className="menu-zone">
-        <AMButton/>
+        <AMButton onClick={this.props.navigateRandom}/>
         <AMButton/>
       </div>
     </div>;

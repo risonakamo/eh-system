@@ -14,6 +14,8 @@ interface AbExploreProps
       targetpath:string|null
     }
   }
+
+  history:RouterHistory
 }
 
 interface AbExploreState
@@ -29,6 +31,7 @@ export default class AbExploreMain extends React.Component
   constructor(props:any)
   {
     super(props);
+    this.navigateToRandom=this.navigateToRandom.bind(this);
 
     this.state={
       albumItems:[]
@@ -56,12 +59,21 @@ export default class AbExploreMain extends React.Component
     });
   }
 
+  /** navigate to a random album from the albums currently showing */
+  navigateToRandom():void
+  {
+    console.log(this.state.albumItems);
+    // this.props.history.push(
+    //   _.sample(this.state.albumItems)!.title
+    // );
+  }
+
   render()
   {
     var targetpath:string=this.props.match.params.targetpath || "";
 
     return <>
-      <AlbumToast targetPath={targetpath}/>
+      <AlbumToast targetPath={targetpath} navigateRandom={this.navigateToRandom}/>
       <div className="tiles">
         {_.map(this.state.albumItems,(x:AlbumInfo)=>{
           return createAlbumTile(x,targetpath);
