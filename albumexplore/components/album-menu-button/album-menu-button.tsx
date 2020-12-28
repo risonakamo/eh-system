@@ -8,6 +8,9 @@ interface AMButtonProps
   onClick?():void
   disabled?:boolean
   title?:string
+
+  normalIcon:string
+  hoverIcon:string
 }
 
 export default function AMButton(props:AMButtonProps):JSX.Element
@@ -29,7 +32,7 @@ export default function AMButton(props:AMButtonProps):JSX.Element
   );
 
   return <div className={amButtonClass} title={props.title} onClick={clickHandler}>
-    <img className="hovered" src="/assets/imgs/shuffle-pink.png"/>
-    <img className="normal" src="/assets/imgs/shuffle-white.png"/>
+    <img className="hovered" src={props.hoverIcon}/>
+    <img className="normal" src={props.normalIcon}/>
   </div>;
 }
