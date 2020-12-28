@@ -10,7 +10,8 @@ import "./albumtoast.less";
 interface AlbumToastProps
 {
   targetPath:string
-  navigateRandom():void
+  navigateRandom():void //navigate random album button action
+  navigateCurrent():void //navigate to current album action
 }
 
 export default class AlbumToast extends React.Component
@@ -34,6 +35,7 @@ export default class AlbumToast extends React.Component
       <div className="icon-zone">
         <SasButton href="/" className="home-icon" routerLink={true}/>
         <AMButton onClick={this.props.navigateRandom}/>
+        <AMButton onClick={this.props.navigateCurrent}/>
       </div>
       <div className="toast-zone">
         {this.generateToasts()}

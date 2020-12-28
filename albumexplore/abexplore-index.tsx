@@ -32,6 +32,7 @@ export default class AbExploreMain extends React.Component
   {
     super(props);
     this.navigateToRandom=this.navigateToRandom.bind(this);
+    this.openCurrentAlbum=this.openCurrentAlbum.bind(this);
 
     this.state={
       albumItems:[]
@@ -90,8 +91,7 @@ export default class AbExploreMain extends React.Component
 
     if (selectedItem.album)
     {
-      this.props.history.push(".");
-      window.location.replace("/viewer"+navPath);
+      this.hardNavigate("/viewer"+navPath);
       return;
     }
 
@@ -99,12 +99,31 @@ export default class AbExploreMain extends React.Component
     this.changeTargetPath(navPath);
   }
 
+  /* navigate to viewer page for the current album url. does not work if at top level */
+  openCurrentAlbum():void
+  {
+    if (!this.props.match.params.targetpath)
+    {
+      return;
+    }
+
+    this.hardNavigate("/viewer/"+this.props.match.params.targetpath);
+  }
+
+  /** push history and page navigate to url */
+  hardNavigate(url:string):void
+  {
+    this.props.history.push(".");
+    window.location.replace(url);
+  }
+
   render()
   {
     var targetpath:string=this.props.match.params.targetpath || "";
 
     return <>
-      <AlbumToast targetPath={targetpath} navigateRandom={this.navigateToRandom}/>
+      <AlbumToast targetPath={targetpath} navigateRandom={this.navigateToRandom}
+        navigateCurrent={this.openCurrentAlbum}/>
       <div className="tiles">
         {_.map(this.state.albumItems,(x:AlbumInfo)=>{
           return createAlbumTile(x,targetpath);
