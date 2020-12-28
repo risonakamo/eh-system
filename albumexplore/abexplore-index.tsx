@@ -63,7 +63,8 @@ export default class AbExploreMain extends React.Component
   navigateToRandom():void
   {
     // need to construct an absolute path to the path we would like to go to.
-    var title:string=_.sample(this.state.albumItems)!.title;
+    var selectedItem:AlbumInfo=_.sample(this.state.albumItems)!;
+    var title:string=selectedItem.title;
     var currentPath:string|null=this.props.match.params.targetpath;
     var navPath:string;
 
@@ -86,6 +87,13 @@ export default class AbExploreMain extends React.Component
 
     // sometimes the slash gets duplicated, fix it.
     navPath=navPath.replace("//","/");
+
+    if (selectedItem.album)
+    {
+      this.props.history.push(".");
+      window.location.replace("/viewer"+navPath);
+      return;
+    }
 
     this.props.history.push(navPath);
     this.changeTargetPath(navPath);
