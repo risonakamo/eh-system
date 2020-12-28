@@ -17,6 +17,20 @@
         }
     }
 
+    &.disabled
+    {
+        opacity: .3;
+        cursor: default;
+
+        &:hover
+        {
+            img.normal
+            {
+                opacity: 1;
+            }
+        }
+    }
+
     &:hover img
     {
         &.normal

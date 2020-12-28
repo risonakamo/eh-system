@@ -34,8 +34,8 @@ export default class AlbumToast extends React.Component
     return <div className="album-toasts">
       <div className="icon-zone">
         <SasButton href="/" className="home-icon" routerLink={true}/>
-        <AMButton onClick={this.props.navigateRandom}/>
-        <AMButton onClick={this.props.navigateCurrent}/>
+        <AMButton onClick={this.props.navigateRandom} title="Select Random"/>
+        <AMButton onClick={this.props.navigateCurrent} disabled={!this.props.targetPath} title="Open Album"/>
       </div>
       <div className="toast-zone">
         {this.generateToasts()}
