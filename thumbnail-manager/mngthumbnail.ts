@@ -1,14 +1,14 @@
-import recursiveDir from "recursive-readdir";
 import normalise from "normalize-path";
 import _ from "lodash";
 import replaceExt from "replace-ext";
-import {join,dirname,extname} from "path";
+import {dirname,extname} from "path";
 import prompts from "prompts";
 import chalk from "chalk";
 import del from "del";
 import meow from "meow";
 
 import {generateThumbnails} from "./thumbnail-generators";
+import {getDirItems,njoin,getDirItemsSize} from "./path-resolvers";
 
 // PATHS SHOULD BE RELATIVE TO THE CURRENT DIRECTORY EXECUTING THE FILE FROM, NOT WHERE THIS FILE IS LOCATED
 const _thumbnailDataDir:string="thumbnaildata";
@@ -75,17 +75,6 @@ async function generateThumbnailsWrap(imageBaseDir:string,thumbnailBaseDir:strin
     generateThumbnails(jobs,batchSize);
 }
 
-/** return path of files, relative to the intially given target path */
-async function getDirItems(target:string):Promise<string[]>
-{
-    target=normalise(target);
-    var paths:string[]=await recursiveDir(target);
-
-    return _.map(paths,(x:string)=>{
-        return normalise(x).replace(target,"");
-    });
-}
-
 /** resolve array of paths RELATIVE TO THE BASEPATH to extra information including thumbnail output location.
  *  basepath and thumbnail dir should be relative to the cwd.*/
 function resolveThumbnailJobs(basepath:string,thumbnaildir:string,relpaths:string[]):ThumbnailGenJob[]
@@ -102,12 +91,6 @@ function resolveThumbnailJobs(basepath:string,thumbnaildir:string,relpaths:strin
             originalExt:extname(x)
         };
     });
-}
-
-/** join with normalisation */
-function njoin(...paths:string[]):string
-{
-    return normalise(join(...paths));
 }
 
 /** clear the target folder, after prompting to clear or not. give force to just clear without asking */
@@ -131,20 +114,6 @@ async function clearDir(target:string,force:boolean=false):Promise<void>
 
     del.sync(njoin(target,"*"));
     console.log(`cleared ${chalk.red(target)}`);
-}
-
-/** attempt to get the number of items inside of a dir, recursively (counts all items in subdirectories) */
-async function getDirItemsSize(target:string):Promise<number>
-{
-    try
-    {
-        return (await getDirItems(target)).length;
-    }
-
-    catch (err)
-    {
-        return 0;
-    }
 }
 
 /** get mng thumbnail args */
