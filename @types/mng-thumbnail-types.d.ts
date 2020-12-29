@@ -9,9 +9,23 @@ interface ThumbnailGenJob
     originalExt:string //original file extension
 }
 
-type MngThumbnailArgsMeow=import("meow").Result<any>
+interface MngThumbnailArgsMeowInner
+{
+    baseDir:{
+        type:"string"
+        default:string
+    }
+    batchSize:{
+        type:"number"
+        default:number
+    }
+}
+
+type MngThumbnailArgsMeow=import("meow").Result<MngThumbnailArgsMeowInner>
 
 interface MngThumbnailArgs
 {
     targetDir:string
+    baseDir:string
+    batchSize:number
 }

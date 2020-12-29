@@ -9,7 +9,7 @@
     "server-run": "node node-build/server/server",
     "server-build": "tsc --project tsconfig-node.json",
     "mng-thumbnails-dev": "npm run server-build && npm run mng-thumbnails --",
-    "mng-thumbnails": "node node-build/thumbnail-manager/mngthumbnail --"
+    "mng-thumbnails": "node node-build/thumbnail-manager/mngthumbnail"
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",

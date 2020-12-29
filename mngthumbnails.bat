@@ -1,0 +1,1 @@
+node node-build/thumbnail-manager/mngthumbnail %*

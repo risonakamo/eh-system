@@ -11,22 +11,24 @@ import meow from "meow";
 import {generateThumbnails} from "./thumbnail-generators";
 
 // PATHS SHOULD BE RELATIVE TO THE CURRENT DIRECTORY EXECUTING THE FILE FROM, NOT WHERE THIS FILE IS LOCATED
-const _imageDataDir:string="../../h/cg";
 const _thumbnailDataDir:string="thumbnaildata";
+
+// default values
+const _imageDataDir:string="../../h/cg";
 const _batchSize:number=6;
 
 async function main():Promise<void>
 {
     var args:MngThumbnailArgs=getArgs();
 
-    var imagedir:string=njoin(_imageDataDir,args.targetDir);
+    var imagedir:string=njoin(args.baseDir,args.targetDir);
     var thumbnaildir:string=njoin(_thumbnailDataDir,args.targetDir);
 
     var paths:string[]=await getDirItems(imagedir);
     var jobs:ThumbnailGenJob[]=resolveThumbnailJobs(imagedir,thumbnaildir,paths);
 
     await clearDir(thumbnaildir);
-    generateThumbnails(jobs,_batchSize);
+    generateThumbnails(jobs,args.batchSize);
 }
 
 /** return path of files, relative to the intially given target path */
@@ -87,10 +89,26 @@ async function clearDir(target:string):Promise<void>
 function getArgs():MngThumbnailArgs
 {
     var args:MngThumbnailArgsMeow=meow(`
-        mng-thumbnails <TARGET-DIR>
+        mng-thumbnails [flags] <TARGET-DIR>
 
-        TARGET-DIR: path to directory to regenerate thumbnails for, ${chalk.green("relative to the base image dir")}
-    `);
+        args:
+        - TARGET-DIR: path to directory to regenerate thumbnails for, ${chalk.green("relative to the base image dir")}
+
+        flags:
+        --base-dir <path>: path to base image dir to use
+        --batch-size <number>: generator processing batch size
+    `,{
+        flags:{
+            baseDir:{
+                type:"string",
+                default:_imageDataDir
+            },
+            batchSize:{
+                type:"number",
+                default:_batchSize
+            }
+        }
+    });
 
     if (args.input.length!=1)
     {
@@ -98,7 +116,9 @@ function getArgs():MngThumbnailArgs
     }
 
     return {
-        targetDir:args.input[0]
+        targetDir:args.input[0],
+        baseDir:args.flags.baseDir,
+        batchSize:args.flags.batchSize
     };
 }
 
