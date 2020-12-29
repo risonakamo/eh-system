@@ -21,14 +21,39 @@ async function main():Promise<void>
 {
     var args:MngThumbnailArgs=getArgs();
 
-    var imagedir:string=njoin(args.baseDir,args.targetDir);
-    var thumbnaildir:string=njoin(_thumbnailDataDir,args.targetDir);
+    generateThumbnailsWrap(args.baseDir,_thumbnailDataDir,args.targetDir,null,args.batchSize);
+}
+
+/** wrapper function for generate thumbnails activity.
+ *  - imageBaseDir: base directory of images
+ *  - targetBaseDir: base directory to place output thumbnails
+ *  - target: path **RELATIVE TO THE PREVIOUSLY GIVEN BASE IMAGE DIR** to generate thumbnails for.
+ *    for example, to generate all thumbnails give "." or "/".
+ *  - promptClearDir: ask to clear the output dir or not. provide null to ask, provide true to clear, provide
+ *    false to not clear. default is to ask.
+ *  - batchSize: batch size to use*/
+async function generateThumbnailsWrap(imageBaseDir:string,thumbnailBaseDir:string,target:string,
+    doClearDir:boolean|null=null,batchSize:number=6):Promise<void>
+{
+    var imagedir:string=njoin(imageBaseDir,target);
+    var thumbnaildir:string=njoin(thumbnailBaseDir,target);
+
+    // ask to clear if not set
+    if (doClearDir==null)
+    {
+        await clearDir(thumbnaildir);
+    }
+
+    // if set to true, always clear, otherwise, do not clear
+    else if (doClearDir==true)
+    {
+        await clearDir(thumbnaildir,true);
+    }
 
     var paths:string[]=await getDirItems(imagedir);
     var jobs:ThumbnailGenJob[]=resolveThumbnailJobs(imagedir,thumbnaildir,paths);
 
-    await clearDir(thumbnaildir);
-    generateThumbnails(jobs,args.batchSize);
+    generateThumbnails(jobs,batchSize);
 }
 
 /** return path of files, relative to the intially given target path */
@@ -66,19 +91,23 @@ function njoin(...paths:string[]):string
     return normalise(join(...paths));
 }
 
-/** clear the target folder, after prompting to clear or not */
-async function clearDir(target:string):Promise<void>
+/** clear the target folder, after prompting to clear or not. give force to just clear without asking */
+async function clearDir(target:string,force:boolean=false):Promise<void>
 {
-    var response=await prompts({
-        type:"confirm",
-        name:"doDelete",
-        message:`confirm clear ${chalk.green(target)}`
-    });
-
-    if (!response.doDelete)
+    // do not ask if force
+    if (!force)
     {
-        console.log(chalk.red("not deleting"));
-        return;
+        var response=await prompts({
+            type:"confirm",
+            name:"doDelete",
+            message:`confirm clear ${chalk.green(target)}`
+        });
+
+        if (!response.doDelete)
+        {
+            console.log(chalk.red("not deleting"));
+            return;
+        }
     }
 
     del.sync(njoin(target,"*"));

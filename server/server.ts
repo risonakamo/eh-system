@@ -55,14 +55,24 @@ function main()
     // get an album from the image data folder. also generate thumbnails if needed.
     app.post("/get-album",express.text(),(req,res)=>{
         console.log("get album:",req.body);
-        generateThumbnailsForPath(fullImageDataDir,fullThumbnailDataDir,req.body);
+        // generateThumbnailsForPath(fullImageDataDir,fullThumbnailDataDir,req.body);
+        console.log("get album",{
+            imagedatadir:fullImageDataDir,
+            thumbnaildir:fullThumbnailDataDir,
+            target:req.body
+        });
         res.json(getImagesInPath2Flat(fullImageDataDir,req.body));
     });
 
     // given a target album path, retrieve album information for that path.
     app.post("/get-album-info",express.text(),(req,res)=>{
         console.log("album info:",req.body || "/");
-        generateThumbnailsForPath(fullImageDataDir,fullThumbnailDataDir,req.body);
+        // generateThumbnailsForPath(fullImageDataDir,fullThumbnailDataDir,req.body);
+        console.log("get album info",{
+            imagedatadir:fullImageDataDir,
+            thumbnaildir:fullThumbnailDataDir,
+            target:req.body
+        });
         res.json(getAlbumInfo(fullImageDataDir,req.body));
     });
     // --- end apis ---
