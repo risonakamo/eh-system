@@ -31,12 +31,30 @@ async function main():Promise<void>
  *    for example, to generate all thumbnails give "." or "/".
  *  - promptClearDir: ask to clear the output dir or not. provide null to ask, provide true to clear, provide
  *    false to not clear. default is to ask.
- *  - batchSize: batch size to use*/
+ *  - batchSize: batch size to use
+ *  - quitIfExists: check if the thumbnail dir has a similar number of items to the image dir attempting to generate
+ *    for. if it does, then quits. */
 async function generateThumbnailsWrap(imageBaseDir:string,thumbnailBaseDir:string,target:string,
-    doClearDir:boolean|null=null,batchSize:number=6):Promise<void>
+    doClearDir:boolean|null=null,batchSize:number=6,quitIfExists:boolean=false):Promise<void>
 {
+    // get image dir
     var imagedir:string=njoin(imageBaseDir,target);
+    // get thumbnail dir
     var thumbnaildir:string=njoin(thumbnailBaseDir,target);
+
+    // get all image paths recursively.
+    var paths:string[]=await getDirItems(imagedir);
+
+    // if quit if exists set, checks the number of images in thumbnail dir. if an equal number, then quits.
+    if (quitIfExists)
+    {
+        var existingThumbnails:number=await getDirItemsSize(thumbnaildir);
+        if (paths.length==existingThumbnails)
+        {
+            console.log(chalk.blue("cancelling thumbnail generation due to existence check"));
+            return;
+        }
+    }
 
     // ask to clear if not set
     if (doClearDir==null)
@@ -50,9 +68,10 @@ async function generateThumbnailsWrap(imageBaseDir:string,thumbnailBaseDir:strin
         await clearDir(thumbnaildir,true);
     }
 
-    var paths:string[]=await getDirItems(imagedir);
+    // create thumbnail gen jobs
     var jobs:ThumbnailGenJob[]=resolveThumbnailJobs(imagedir,thumbnaildir,paths);
 
+    // perform generation
     generateThumbnails(jobs,batchSize);
 }
 
@@ -112,6 +131,20 @@ async function clearDir(target:string,force:boolean=false):Promise<void>
 
     del.sync(njoin(target,"*"));
     console.log(`cleared ${chalk.red(target)}`);
+}
+
+/** attempt to get the number of items inside of a dir, recursively (counts all items in subdirectories) */
+async function getDirItemsSize(target:string):Promise<number>
+{
+    try
+    {
+        return (await getDirItems(target)).length;
+    }
+
+    catch (err)
+    {
+        return 0;
+    }
 }
 
 /** get mng thumbnail args */
