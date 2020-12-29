@@ -34,7 +34,7 @@ async function main():Promise<void>
  *  - batchSize: batch size to use
  *  - quitIfExists: check if the thumbnail dir has a similar number of items to the image dir attempting to generate
  *    for. if it does, then quits. */
-async function generateThumbnailsWrap(imageBaseDir:string,thumbnailBaseDir:string,target:string,
+export async function generateThumbnailsWrap(imageBaseDir:string,thumbnailBaseDir:string,target:string,
     doClearDir:boolean|null=null,batchSize:number=6,quitIfExists:boolean=false):Promise<void>
 {
     // get image dir
@@ -51,7 +51,6 @@ async function generateThumbnailsWrap(imageBaseDir:string,thumbnailBaseDir:strin
         var existingThumbnails:number=await getDirItemsSize(thumbnaildir);
         if (paths.length==existingThumbnails)
         {
-            console.log(chalk.blue("cancelling thumbnail generation due to existence check"));
             return;
         }
     }
@@ -153,4 +152,7 @@ function getArgs():MngThumbnailArgs
     };
 }
 
-main();
+if (require.main===module)
+{
+    main();
+}
