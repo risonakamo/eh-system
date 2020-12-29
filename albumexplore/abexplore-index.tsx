@@ -2,7 +2,7 @@ import React from "react";
 import _ from "lodash";
 
 import AlbumTile from "./components/album-tile/albumtile";
-import AlbumToast from "./components/album-toast/albumtoast";
+import AlbumMenu from "./components/album-menu/album-menu";
 
 import "./abexplore-index.less";
 
@@ -122,7 +122,7 @@ export default class AbExploreMain extends React.Component
     var targetpath:string=this.props.match.params.targetpath || "";
 
     return <>
-      <AlbumToast targetPath={targetpath} navigateRandom={this.navigateToRandom}
+      <AlbumMenu targetPath={targetpath} navigateRandom={this.navigateToRandom}
         navigateCurrent={this.openCurrentAlbum}/>
       <div className="tiles">
         {_.map(this.state.albumItems,(x:AlbumInfo)=>{

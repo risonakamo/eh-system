@@ -5,18 +5,18 @@ import _ from "lodash";
 import SasButton from "../../../ehviewer/components/sas-button/sasbutton";
 import AMButton from "../album-menu-button/album-menu-button";
 
-import "./albumtoast.less";
+import "./album-menu.less";
 
-interface AlbumToastProps
+interface AlbumMenuProps
 {
   targetPath:string
   navigateRandom():void //navigate random album button action
   navigateCurrent():void //navigate to current album action
 }
 
-export default class AlbumToast extends React.Component
+export default class AlbumMenu extends React.Component
 {
-  props:AlbumToastProps
+  props:AlbumMenuProps
 
   // create toasts from props
   generateToasts():(JSX.Element|null)[]
