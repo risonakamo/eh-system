@@ -9,6 +9,7 @@ import {getAlbumInfo} from "./album-service";
 import {generateThumbnailsWrap} from "../thumbnail-manager/mngthumbnail";
 
 const _batchSize:number=6;
+const _defaultImageDir="../../../../h/cg";
 
 function main()
 {
@@ -106,7 +107,7 @@ function getArgs():ServerArgs
             // path to image data dir
             path:{
                 type:"string",
-                default:"../../../../h/cg"
+                default:_defaultImageDir
             }
         },
         help:`--path: specify path to target image data directory, relative to the eh-system build folder`

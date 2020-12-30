@@ -1,31 +1,23 @@
 # album shuffle server (eh-system)
-a local album server for browsing and viewing folders of images, with shuffle merging.
+local album server for browsing and viewing folders of images, with shuffle merging.
 
 # installation
-## initial configuration
-- in `server/server.ts`, the path to the image directory (directory containing images you wish to host), must be set.
-- the path to the thumbnails directory (where generated thumbnails will be stored) must be set.
-
-## building
 ```bash
 npm i
 npm run build
-npm run server-build
 ```
-
-after building, can use `runserver.bat` to launch the server.
+after building, can use `runserver.bat` to launch the server. modify the path in `runserver.bat` to point to your image path.
+  - path must be relative to node-build/server/server.js
 
 # npm commands
-## frontend
-- `watch`: (dev) watch
-- `build-dev`: (dev) build for dev
-- `build`: build for production
-
-## server
+## usage
+- `build`: build all components for production use
 - `server-run`: run the server
-- `server-build`: (dev) build the server
-- `server`: (dev) build and run the server
+- `mng-thumbnails`: use thumbnail manager cli
 
-## thumbnail management
-- `mng-thumbnails`: run mng thumbnails program
-- `mng-thumbnails-dev`: (dev) build and run mng thumbnails
+## dev
+- `watch`: watch frontend
+- `build-dev`: build frontend for dev
+- `server-build`: build the server
+- `server`: build and run the server
+- `mng-thumbnails-dev`: build and run mng thumbnails
