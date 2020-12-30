@@ -104,6 +104,11 @@ async function clearDir(target:string,force:boolean=false):Promise<void>
             message:`confirm clear ${chalk.green(target)}`
         });
 
+        if (response.doDelete==undefined)
+        {
+            process.exit();
+        }
+
         if (!response.doDelete)
         {
             console.log(chalk.red("not deleting"));
