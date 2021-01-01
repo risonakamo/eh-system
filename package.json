@@ -1,6 +1,6 @@
 {
   "name": "eh-system",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "scripts": {
     "build": "webpack --env prod && npm run server-build",
     "build-dev": "webpack",
