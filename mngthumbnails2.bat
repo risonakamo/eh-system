@@ -1,1 +1,0 @@
-node node-build/thumbnail-manager/mngthumbnail --base-dir ../../h/3d %*
