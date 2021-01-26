@@ -8,4 +8,6 @@ imagedata
 thumbnaildata
 thumbnaildata2
 
+nginx/logs
+
 *.lnk

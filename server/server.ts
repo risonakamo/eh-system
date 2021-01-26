@@ -10,6 +10,8 @@ import {generateThumbnailsWrap} from "../thumbnail-manager/mngthumbnail";
 
 const _batchSize:number=6;
 const _defaultImageDir="../../../../h/cg";
+const _port:number=81;
+const _staticServing:boolean=false;
 
 function main()
 {
@@ -25,34 +27,37 @@ function main()
     const app=express();
 
     // --- static serving ---
-    // eh viewer page
-    app.use("/viewer/*",express.static(`${__dirname}/../../ehviewer`));
+    if (_staticServing)
+    {
+        // eh viewer page
+        app.use("/viewer/*",express.static(`${__dirname}/../../ehviewer`));
 
-    // album explore page
-    app.use("/albums*",express.static(`${__dirname}/../../albumexplore`));
-    app.use("//",(req,res)=>{
-        res.redirect("/albums");
-    });
+        // album explore page
+        app.use("/albums*",express.static(`${__dirname}/../../albumexplore`));
+        app.use("//",(req,res)=>{
+            res.redirect("/albums");
+        });
 
-    // web page combined build folder
-    app.use("/build",express.static(`${__dirname}/../../build`));
+        // web page combined build folder
+        app.use("/build",express.static(`${__dirname}/../../build`));
 
-    // fonts folder
-    app.use("/assets/fonts",express.static(`${__dirname}/../../fonts`));
+        // fonts folder
+        app.use("/assets/fonts",express.static(`${__dirname}/../../fonts`));
 
-    // img assets folder
-    app.use("/assets/imgs",express.static(`${__dirname}/../../imgs`));
+        // img assets folder
+        app.use("/assets/imgs",express.static(`${__dirname}/../../imgs`));
 
-    // image data directory
-    app.use("/imagedata",express.static(fullImageDataDir));
+        // image data directory
+        app.use("/imagedata",express.static(fullImageDataDir));
 
-    // thumbnail data directory
-    app.use("/thumbnaildata",express.static(fullThumbnailDataDir));
+        // thumbnail data directory
+        app.use("/thumbnaildata",express.static(fullThumbnailDataDir));
 
-    // temporary directory browser
-    app.use("/imagedata",serveIndex(fullImageDataDir,{
-        icons:true
-    }));
+        // temporary directory browser
+        app.use("/imagedata",serveIndex(fullImageDataDir,{
+            icons:true
+        }));
+    }
     // --- end static serving ---
 
     // --- apis ---
@@ -95,7 +100,7 @@ function main()
     });
     // --- end apis ---
 
-    app.listen(80,()=>{
+    app.listen(_port,()=>{
         console.log(chalk.green("EH-SYSTEM started"));
     });
 }
