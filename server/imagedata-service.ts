@@ -5,11 +5,12 @@ import normalize from "normalize-path";
 import imageThumbnail from "image-thumbnail";
 import videoThumbnail from "video-thumbnail-generator";
 import replaceExt from "replace-ext";
+import naturalCompare from "natural-compare";
 
 // return image urls at target path.
 export function getImagesInPath2Flat(imageDataPath:string,targetPath:string):string[]
 {
-    return _.flatten(getImagesInPath2(imageDataPath,targetPath));
+    return _.flatten(getImagesInPath2(imageDataPath,targetPath)).sort(naturalCompare);
 }
 
 // generate thumbnails for the target path into the thumbnail data folder
