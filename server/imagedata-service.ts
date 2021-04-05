@@ -10,7 +10,7 @@ import naturalCompare from "natural-compare";
 // return image urls at target path.
 export function getImagesInPath2Flat(imageDataPath:string,targetPath:string):string[]
 {
-    return _.flatten(getImagesInPath2(imageDataPath,targetPath)).sort(naturalCompare);
+    return _.flatten(getImagesInPath2(imageDataPath,targetPath));
 }
 
 // generate thumbnails for the target path into the thumbnail data folder
@@ -117,6 +117,8 @@ function getImagesInPath2(imageDataPath:string,targetPath:string):string[][]
 
         return true;
     });
+
+    imgNames.sort(naturalCompare);
 
     // converting all images to final abstract path
     imgNames=_.map(imgNames,(x:string)=>{
