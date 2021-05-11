@@ -1,5 +1,5 @@
 cd ../nginx
-nginx -c nginx.conf -s quit
+taskkill /F /im nginx.exe
 start nginx -c nginx.conf
 
 cd ..

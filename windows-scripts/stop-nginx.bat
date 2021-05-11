@@ -1,2 +1,1 @@
-cd ../nginx
-nginx -c nginx.conf -s quit
+taskkill /F /im nginx.exe
