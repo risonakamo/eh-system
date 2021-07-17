@@ -110,7 +110,7 @@ class EhViewerMain extends React.Component
         // otherwise, perform initial fit based on the formula
         else if ((this.theviewer.containerData.width/this.theviewer.containerData.height)>this.theviewer.imageData.aspectRatio)
         {
-          this.fitHeight();
+          this.fitHeight(true);
         }
 
         else
@@ -140,13 +140,23 @@ class EhViewerMain extends React.Component
   {
     this.theviewer.zoomTo(this.theviewer.containerData.width/this.theviewer.imageData.naturalWidth);
     this.theviewer.moveTo(0,this.theviewer.containerData.height/2-this.theviewer.imageData.height/2);
+    this.setState({
+      statusText:"Fit Width"
+    });
   }
 
   //do fit height on the viewer
-  fitHeight():void
+  fitHeight(initial:boolean=false):void
   {
     this.theviewer.zoomTo(this.theviewer.containerData.height/this.theviewer.imageData.naturalHeight);
     this.theviewer.moveTo(this.theviewer.containerData.width/2-this.theviewer.imageData.width/2,0);
+
+    if (!initial)
+    {
+      this.setState({
+        statusText:"Fit Height"
+      });
+    }
   }
 
   //navigate to the given image index
@@ -174,9 +184,11 @@ class EhViewerMain extends React.Component
     }
 
     this.imageChangeInProgress=true;
+    var newimage:ImageObject=this.state.imgs[imgIndex];
     this.setState({
-      currentImage:this.state.imgs[imgIndex],
-      currentImageIndex:imgIndex
+      currentImage:newimage,
+      currentImageIndex:imgIndex,
+      statusText:newimage.link
     });
   }
 
