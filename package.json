@@ -1,8 +1,8 @@
 {
   "name": "eh-system",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "scripts": {
-    "build-all": "webpack --env prod && npm run server-build",
+    "build-all": "webpack --env prod && npm run build-server",
     "build-web": "webpack",
     "watch": "webpack --watch",
     "build-server": "tsc --project tsconfig-node.json",
