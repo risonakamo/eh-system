@@ -17,4 +17,4 @@ else
 fi
 
 cd ..
-sudo npm run server -- --path $TARGET
+sudo npm run run-server -- --path $TARGET

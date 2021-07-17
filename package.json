@@ -2,12 +2,12 @@
   "name": "eh-system",
   "version": "2.2.0",
   "scripts": {
-    "build": "webpack --env prod && npm run server-build",
-    "build-dev": "webpack",
+    "build-all": "webpack --env prod && npm run server-build",
+    "build-web": "webpack",
     "watch": "webpack --watch",
-    "server-build": "tsc --project tsconfig-node.json",
-    "server": "node node-build/server/server",
-    "server-dev": "npm run server-build && npm run server",
+    "build-server": "tsc --project tsconfig-node.json",
+    "run-server": "node node-build/server/server",
+    "dev-server": "npm run server-build && npm run server",
     "mng-thumbnails-dev": "npm run server-build && npm run mng-thumbnails --",
     "mng-thumbnails": "node node-build/thumbnail-manager/mngthumbnail"
   },
