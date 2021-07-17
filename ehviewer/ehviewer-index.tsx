@@ -115,7 +115,7 @@ class EhViewerMain extends React.Component
 
         else
         {
-          this.fitWidth();
+          this.fitWidth(true);
         }
       }
     });
@@ -136,13 +136,16 @@ class EhViewerMain extends React.Component
   }
 
   //do fit width on the viewer
-  fitWidth():void
+  fitWidth(initial:boolean=false):void
   {
     this.theviewer.zoomTo(this.theviewer.containerData.width/this.theviewer.imageData.naturalWidth);
     this.theviewer.moveTo(0,this.theviewer.containerData.height/2-this.theviewer.imageData.height/2);
-    this.setState({
-      statusText:"Fit Width"
-    });
+    if (!initial)
+    {
+      this.setState({
+        statusText:"Fit Width"
+      });
+    }
   }
 
   //do fit height on the viewer

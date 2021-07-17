@@ -1,4 +1,5 @@
-import React,{useEffect,useRef} from "react";
+import React,{useEffect,useRef,useState} from "react";
+import cx from "classnames";
 
 import "./status-indicator.less";
 
@@ -11,12 +12,29 @@ export default function StatusIndicator(props:StatusIndicatorProps):JSX.Element
 {
   const theElement=useRef<HTMLDivElement>(null);
 
+  const [fadingOut,setFadingOut]=useState<boolean>(false);
+
+  const fadingOutTimer=useRef<ReturnType<typeof setTimeout>>();
+
   // trigger fade out on text change
   useEffect(()=>{
+    if (fadingOutTimer.current)
+    {
+      clearTimeout(fadingOutTimer.current);
+    }
 
+    setFadingOut(false);
+
+    fadingOutTimer.current=setTimeout(()=>{
+      setFadingOut(true);
+    },10);
   },[props.text]);
 
-  return <div className="status-indicator" ref={theElement}>
+  const topClass={
+    "fade-out":fadingOut
+  };
+
+  return <div className={cx("status-indicator",topClass)} ref={theElement}>
     {props.text}
   </div>;
 }
