@@ -7,6 +7,7 @@ import cx from "classnames";
 
 import PreviewPanel from "./components/previewpanel/previewpanel";
 import VideoView,{isVideo} from "./components/video-view/videoview";
+import StatusIndicator from "./components/status-indicator/status-indicator";
 
 import "./ehviewer-index.less";
 import "viewerjs/dist/viewer.css";
@@ -33,6 +34,8 @@ interface EhViewerState
 
   imgs:ImageObject[] //the images
   currentImageIndex:number //the current image index
+
+  statusText:string
 }
 
 /* EhViewerMain(RouterMatch match) */
@@ -62,7 +65,8 @@ class EhViewerMain extends React.Component
       mouseHidden:false,
       panelShowing:false,
       imgs:[],
-      currentImageIndex:0
+      currentImageIndex:0,
+      statusText:""
     };
 
     //image repositioning has not completed, dont save image positioning if the image changes
@@ -86,6 +90,7 @@ class EhViewerMain extends React.Component
       button:false,
       zoomRatio:.3,
       backdrop:false,
+      transition:false,
       ready:()=>{
         this.theviewer.full();
       },
@@ -310,6 +315,8 @@ class EhViewerMain extends React.Component
     };
 
     return <>
+      <StatusIndicator text={this.state.statusText}/>
+
       <div className={cx("the-viewer",viewerClasses)}>
         <ul ref={this.theviewerElement}>
           {_.map(this.state.imgs,(x:ImageObject,i:number)=>{
