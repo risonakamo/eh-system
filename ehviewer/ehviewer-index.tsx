@@ -35,6 +35,7 @@ interface EhViewerState
   imgs:ImageObject[] //the images
   currentImageIndex:number //the current image index
 
+  // current status indicator display text
   statusText:string
 }
 
@@ -53,6 +54,8 @@ class EhViewerMain extends React.Component
   hideTimer:number //for mouse timer
 
   thumbnails:string[] //thumbnails more static than images so stored here
+
+  transitions:boolean
 
   constructor(props:EhViewerProps)
   {
@@ -79,6 +82,9 @@ class EhViewerMain extends React.Component
 
     // mouse hide stuff
     this.hideTimer=0;
+
+    // current transitions mode
+    this.transitions=false;
   }
 
   async componentDidMount()
@@ -90,7 +96,7 @@ class EhViewerMain extends React.Component
       button:false,
       zoomRatio:.3,
       backdrop:false,
-      transition:false,
+      transition:this.transitions,
       ready:()=>{
         this.theviewer.full();
       },
@@ -195,6 +201,19 @@ class EhViewerMain extends React.Component
     });
   }
 
+  /** toggle viewer transitions */
+  toggleTransitionMode():void
+  {
+    this.transitions=!this.transitions;
+    this.theviewer.options.transition=this.transitions;
+
+    var transitionText:string=this.transitions?"ON":"OFF";
+
+    this.setState({
+      statusText:`set transitions ${transitionText}`
+    });
+  }
+
   //deploy global keyboard controls
   keyControl():void
   {
@@ -246,6 +265,11 @@ class EhViewerMain extends React.Component
           panelShowing:!this.state.panelShowing
         });
       }
+
+      else if (e.key=="t")
+      {
+        this.toggleTransitionMode();
+      };
     });
   }
 
