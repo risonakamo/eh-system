@@ -24,10 +24,24 @@ export default class AlbumMenu extends React.Component
   {
     var subpaths:string[]=splitToSubPaths(this.props.targetPath);
     var singlepaths:string[]=this.props.targetPath.split("/");
+    this.setTitle(_.last(singlepaths));
 
     return _.flatMap(singlepaths,(x:string,i:number)=>{
       return generateToast(x,subpaths[i],i==singlepaths.length-1);
     });
+  }
+
+  /** attempt to set the page title. give it the end of the paths */
+  setTitle(target:string|undefined):void
+  {
+    var title:string="Albums";
+
+    if (target && target.length)
+    {
+      title=`${title} - ${target}`;
+    }
+
+    document.title=title;
   }
 
   render()
