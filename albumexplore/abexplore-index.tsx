@@ -33,6 +33,7 @@ export default class AbExploreMain extends React.Component
     super(props);
     this.navigateToRandom=this.navigateToRandom.bind(this);
     this.openCurrentAlbum=this.openCurrentAlbum.bind(this);
+    this.navigateToRandomNewTab=this.navigateToRandomNewTab.bind(this);
 
     this.state={
       albumItems:[]
@@ -61,7 +62,7 @@ export default class AbExploreMain extends React.Component
   }
 
   /** navigate to a random album from the albums currently showing */
-  navigateToRandom():void
+  navigateToRandom(newTab:boolean=false):void
   {
     // need to construct an absolute path to the path we would like to go to.
     var selectedItem:AlbumInfo=_.sample(this.state.albumItems)!;
@@ -89,14 +90,45 @@ export default class AbExploreMain extends React.Component
     // sometimes the slash gets duplicated, fix it.
     navPath=navPath.replace("//","/");
 
-    if (selectedItem.album)
+    // if not opening a new tab
+    if (!newTab)
     {
-      this.hardNavigate("/viewer"+navPath);
-      return;
+      if (selectedItem.album)
+      {
+        this.hardNavigate("/viewer"+navPath);
+      }
+
+      // not an album
+      else
+      {
+        this.props.history.push(navPath);
+        this.changeTargetPath(navPath);
+      }
     }
 
-    this.props.history.push(navPath);
-    this.changeTargetPath(navPath);
+    // navigating to random in new tab
+    else
+    {
+      // add viewer for album
+      if (selectedItem.album)
+      {
+        navPath="/viewer"+navPath;
+      }
+
+      else
+      {
+        navPath="/albums"+navPath;
+      }
+
+      // spawn new tab
+      window.open(window.location.origin+navPath,"_blank");
+    }
+  }
+
+  /** navigate to random in new tab */
+  navigateToRandomNewTab():void
+  {
+    this.navigateToRandom(true);
   }
 
   /* navigate to viewer page for the current album url. does not work if at top level */
@@ -123,7 +155,7 @@ export default class AbExploreMain extends React.Component
 
     return <>
       <AlbumMenu targetPath={targetpath} navigateRandom={this.navigateToRandom}
-        navigateCurrent={this.openCurrentAlbum}/>
+        navigateCurrent={this.openCurrentAlbum} navigateRandomNewTab={this.navigateToRandomNewTab}/>
       <div className="tiles">
         {_.map(this.state.albumItems,(x:AlbumInfo)=>{
           return createAlbumTile(x,targetpath);

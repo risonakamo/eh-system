@@ -6,6 +6,7 @@ import "./album-menu-button.less";
 interface AMButtonProps
 {
   onClick?():void
+  onCtrlClick?():void
   disabled?:boolean
   title?:string
 
@@ -16,14 +17,22 @@ interface AMButtonProps
 export default function AMButton(props:AMButtonProps):JSX.Element
 {
   /** click handler, disabled when button disabled */
-  function clickHandler():void
+  function clickHandler(e:React.MouseEvent):void
   {
     if (props.disabled)
     {
       return;
     }
 
-    props.onClick?.();
+    if (e.ctrlKey)
+    {
+      props.onCtrlClick?.();
+    }
+
+    else
+    {
+      props.onClick?.();
+    }
   }
 
   const amButtonClass:string=cx(

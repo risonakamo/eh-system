@@ -11,6 +11,7 @@ interface AlbumMenuProps
 {
   targetPath:string
   navigateRandom():void //navigate random album button action
+  navigateRandomNewTab():void
   navigateCurrent():void //navigate to current album action
 }
 
@@ -34,8 +35,9 @@ export default class AlbumMenu extends React.Component
     return <div className="album-toasts">
       <div className="icon-zone">
         <SasButton href="/" className="home-icon" routerLink={true}/>
-        <AMButton onClick={this.props.navigateRandom} title="Select Random"
-          normalIcon="/assets/imgs/shuffle-white.png" hoverIcon="/assets/imgs/shuffle-pink.png"/>
+        <AMButton onClick={this.props.navigateRandom} onCtrlClick={this.props.navigateRandomNewTab}
+          title="Select Random" normalIcon="/assets/imgs/shuffle-white.png"
+          hoverIcon="/assets/imgs/shuffle-pink.png"/>
         <AMButton onClick={this.props.navigateCurrent} disabled={!this.props.targetPath} title="Open Album"
           normalIcon="/assets/imgs/viewer-white.png" hoverIcon="/assets/imgs/viewer-pink.png"/>
       </div>
