@@ -15,24 +15,10 @@ interface AlbumMenuProps
   navigateCurrent():void //navigate to current album action
 }
 
-export default class AlbumMenu extends React.Component
+export default function AlbumMenu2(props:AlbumMenuProps):JSX.Element
 {
-  props:AlbumMenuProps
-
-  // create toasts from props
-  generateToasts():(JSX.Element|null)[]
-  {
-    var subpaths:string[]=splitToSubPaths(this.props.targetPath);
-    var singlepaths:string[]=this.props.targetPath.split("/");
-    this.setTitle(_.last(singlepaths));
-
-    return _.flatMap(singlepaths,(x:string,i:number)=>{
-      return generateToast(x,subpaths[i],i==singlepaths.length-1);
-    });
-  }
-
   /** attempt to set the page title. give it the end of the paths */
-  setTitle(target:string|undefined):void
+  function setTitle(target:string|undefined):void
   {
     var title:string="Albums";
 
@@ -44,22 +30,33 @@ export default class AlbumMenu extends React.Component
     document.title=title;
   }
 
-  render()
+
+  /** ---- RENDER ---- */
+  /** create toasts from props */
+  function generateToasts():(JSX.Element|null)[]
   {
-    return <div className="album-toasts">
-      <div className="icon-zone">
-        <SasButton href="/" className="home-icon" routerLink={true}/>
-        <AMButton onClick={this.props.navigateRandom} onCtrlClick={this.props.navigateRandomNewTab}
-          title="Select Random" normalIcon="/assets/imgs/shuffle-white.png"
-          hoverIcon="/assets/imgs/shuffle-pink.png"/>
-        <AMButton onClick={this.props.navigateCurrent} disabled={!this.props.targetPath} title="Open Album"
-          normalIcon="/assets/imgs/viewer-white.png" hoverIcon="/assets/imgs/viewer-pink.png"/>
-      </div>
-      <div className="toast-zone">
-        {this.generateToasts()}
-      </div>
-    </div>;
+    var subpaths:string[]=splitToSubPaths(props.targetPath);
+    var singlepaths:string[]=props.targetPath.split("/");
+    setTitle(_.last(singlepaths));
+
+    return _.flatMap(singlepaths,(x:string,i:number)=>{
+      return generateToast(x,subpaths[i],i==singlepaths.length-1);
+    });
   }
+
+  return <div className="album-toasts">
+    <div className="icon-zone">
+      <SasButton href="/" className="home-icon" routerLink={true}/>
+      <AMButton onClick={props.navigateRandom} onCtrlClick={props.navigateRandomNewTab}
+        title="Select Random" normalIcon="/assets/imgs/shuffle-white.png"
+        hoverIcon="/assets/imgs/shuffle-pink.png"/>
+      <AMButton onClick={props.navigateCurrent} disabled={!props.targetPath} title="Open Album"
+        normalIcon="/assets/imgs/viewer-white.png" hoverIcon="/assets/imgs/viewer-pink.png"/>
+    </div>
+    <div className="toast-zone">
+      {generateToasts()}
+    </div>
+  </div>;
 }
 
 // given a target path, split up the paths into sub paths for each

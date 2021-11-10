@@ -17,39 +17,34 @@ interface AlbumTileProps
   realLink?:boolean
 }
 
-export default class AlbumTile extends React.Component
+export default function AlbumTile(props:AlbumTileProps):JSX.Element
 {
-  props:AlbumTileProps
-
-  render()
+  var linkElement:JsxElement;
+  if (!props.realLink)
   {
-    var linkElement:JsxElement;
-    if (!this.props.realLink)
-    {
-      linkElement=<Link to={this.props.link}><img src={this.props.img}/></Link>;
-    }
-
-    else
-    {
-      linkElement=<a href={this.props.link}><img src={this.props.img}/></a>;
-    }
-
-    var mainItemCountStyle=valueToColourConfig(this.props.items,100);
-    var subItemCountStyle={
-      display:this.props.realLink?"none":"",
-      ...valueToColourConfig(this.props.subitems,20)
-    };
-
-    return <div className="album-tile">
-      <div className="title float-label">{this.props.title}</div>
-      <div className="count-holder">
-        <a className="main-count item-count float-label" href={this.props.sublink}
-          style={mainItemCountStyle}>{this.props.items}</a>
-        <a className="sub-count item-count float-label" href={this.props.sublink}
-          style={subItemCountStyle}>{this.props.subitems}</a>
-      </div>
-      <div className="date float-label">{this.props.date}</div>
-      {linkElement}
-    </div>;
+    linkElement=<Link to={props.link}><img src={props.img}/></Link>;
   }
+
+  else
+  {
+    linkElement=<a href={props.link}><img src={props.img}/></a>;
+  }
+
+  var mainItemCountStyle=valueToColourConfig(props.items,100);
+  var subItemCountStyle={
+    display:props.realLink?"none":"",
+    ...valueToColourConfig(props.subitems,20)
+  };
+
+  return <div className="album-tile">
+    <div className="title float-label">{props.title}</div>
+    <div className="count-holder">
+      <a className="main-count item-count float-label" href={props.sublink}
+        style={mainItemCountStyle}>{props.items}</a>
+      <a className="sub-count item-count float-label" href={props.sublink}
+        style={subItemCountStyle}>{props.subitems}</a>
+    </div>
+    <div className="date float-label">{props.date}</div>
+    {linkElement}
+  </div>;
 }
