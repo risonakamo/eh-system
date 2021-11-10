@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useRef,useState,useEffect} from "react";
 import ReactDOM from "react-dom";
 import {BrowserRouter as Router,Switch,Route} from "react-router-dom";
 import _ from "lodash";
@@ -39,272 +39,260 @@ interface EhViewerState
   statusText:string
 }
 
-/* EhViewerMain(RouterMatch match) */
-class EhViewerMain extends React.Component
+export default function EhViewerMain(props:EhViewerProps):JSX.Element
 {
-  props:EhViewerProps
-  state:EhViewerState
+  /** --- STATES --- */
+  const [theCurrentImage,setCurrentImage]=useState<ImageObject|null>(null);
 
-  theviewer:any //the viewer object
-  theviewerElement:RefObject<HTMLUListElement> //the viewer element
-  imageChangeInProgress:boolean
+  const [mouseHidden,setMouseHidden]=useState<boolean>(false);
+  const [panelShowing,setPanelShowing]=useState<boolean>(false);
 
-  justFitHeight:boolean
+  const [theImgs,setImgs]=useState<ImageObject[]>([]);
+  const [theCurrentImageIndex,setCurrentImageIndex]=useState<number>(0);
 
-  hideTimer:number //for mouse timer
+  const [theStatusText,setStatusText]=useState<string>("");
 
-  thumbnails:string[] //thumbnails more static than images so stored here
 
-  transitions:boolean
+  /** --- REFS --- */
+  const theViewer=useRef<any>(null);
+  const theViewerElement=useRef<HTMLUListElement>(null);
 
-  constructor(props:EhViewerProps)
-  {
-    super(props);
-    this.navigateImage=this.navigateImage.bind(this);
-    this.togglePanelShowing=this.togglePanelShowing.bind(this);
+  const imageChangeInProgress=useRef<boolean>(false);
+  const justFitHeight=useRef<boolean>(false);
+  const hideTimer=useRef<number>(0);
 
-    this.state={
-      currentImage:null,
-      mouseHidden:false,
-      panelShowing:false,
-      imgs:[],
-      currentImageIndex:0,
-      statusText:""
-    };
+  const thumbnails=useRef<string[]>([]);
 
-    //image repositioning has not completed, dont save image positioning if the image changes
-    this.imageChangeInProgress=false;
+  const transitions=useRef<boolean>(false);
 
-    //fit height operation occured, next time it will fit width, resets every image change to fit height
-    this.justFitHeight=false;
 
-    this.theviewerElement=React.createRef<HTMLUListElement>();
+  /** --- EFFECTS --- */
+  useEffect(()=>{
+    (async ()=>{
+      theViewer.current=new Viewer(theViewerElement.current as HTMLElement,{
+        inline:true,
+        title:false,
+        keyboard:false,
+        button:false,
+        zoomRatio:.3,
+        backdrop:false,
+        transition:transitions.current,
+        ready:()=>{
+          theViewer.current?.full();
+        },
+        viewed:()=>{
+          imageChangeInProgress.current=false;
 
-    // mouse hide stuff
-    this.hideTimer=0;
+          // if the current image has zoom and other custom values set, set the zoom the the values
+          if (_.get(theCurrentImage,"zoom"))
+          {
+            theViewer.current?.zoomTo(theCurrentImage!.zoom);
+            theViewer.current.moveTo(
+              theCurrentImage!.left,
+              theCurrentImage!.top
+            );
+          }
 
-    // current transitions mode
-    this.transitions=false;
-  }
+          // otherwise, perform initial fit based on the formula
+          else if (
+            (theViewer.current?.containerData.width/theViewer.current?.containerData.height)
+            >theViewer.current?.imageData.aspectRatio
+          )
+          {
+            fitHeight(true);
+          }
 
-  async componentDidMount()
-  {
-    this.theviewer=new Viewer(this.theviewerElement.current as HTMLElement,{
-      inline:true,
-      title:false,
-      keyboard:false,
-      button:false,
-      zoomRatio:.3,
-      backdrop:false,
-      transition:this.transitions,
-      ready:()=>{
-        this.theviewer.full();
-      },
-      viewed:()=>{
-        this.imageChangeInProgress=false;
-
-        // if the current image has zoom and other custom values set, set the zoom the the values
-        if (_.get(this.state.currentImage,"zoom"))
-        {
-          this.theviewer.zoomTo((this.state.currentImage as ImageObject).zoom);
-          this.theviewer.moveTo(
-            (this.state.currentImage as ImageObject).left,
-            (this.state.currentImage as ImageObject).top
-          );
+          else
+          {
+            fitWidth(true);
+          }
         }
+      });
 
-        // otherwise, perform initial fit based on the formula
-        else if ((this.theviewer.containerData.width/this.theviewer.containerData.height)>this.theviewer.imageData.aspectRatio)
-        {
-          this.fitHeight(true);
-        }
+      keyControl();
+      mouseHider();
 
-        else
-        {
-          this.fitWidth(true);
-        }
-      }
-    });
+      linksLoad(await requestAlbum(props.match.params.albumpath));
+      setTitle(props.match.params.albumpath);
+    })();
+  },[]);
 
-    (window as any).viewer=this.theviewer;
-    (window as any).igaroot=this;
+  // navigate to 0 on imgs change.
+  useEffect(()=>{
+    navigateImage(0);
+  },[theImgs]);
 
-    this.keyControl();
-    this.mouseHider();
+  // update viewer on various state changes
+  useEffect(()=>{
+    theViewer.current?.update();
+  },[theCurrentImage,theImgs,theCurrentImageIndex]);
 
-    this.linksLoad(await requestAlbum(this.props.match.params.albumpath));
-    setTitle(this.props.match.params.albumpath);
-  }
 
-  componentDidUpdate()
-  {
-    this.theviewer.update();
-  }
-
+  /** --- METHODS --- */
   //do fit width on the viewer
-  fitWidth(initial:boolean=false):void
+  function fitWidth(initial:boolean=false):void
   {
-    this.theviewer.zoomTo(this.theviewer.containerData.width/this.theviewer.imageData.naturalWidth);
-    this.theviewer.moveTo(0,this.theviewer.containerData.height/2-this.theviewer.imageData.height/2);
+    theViewer.current?.zoomTo(
+      theViewer.current?.containerData.width/theViewer.current?.imageData.naturalWidth
+    );
+
+    theViewer.current?.moveTo(
+      0,
+      theViewer.current?.containerData.height/2-theViewer.current?.imageData.height/2
+    );
+
     if (!initial)
     {
-      this.setState({
-        statusText:"Fit Width"
-      });
+      setStatusText("Fit Width");
     }
   }
 
   //do fit height on the viewer
-  fitHeight(initial:boolean=false):void
+  function fitHeight(initial:boolean=false):void
   {
-    this.theviewer.zoomTo(this.theviewer.containerData.height/this.theviewer.imageData.naturalHeight);
-    this.theviewer.moveTo(this.theviewer.containerData.width/2-this.theviewer.imageData.width/2,0);
+    theViewer.current?.zoomTo(
+      theViewer.current?.containerData.height/theViewer.current?.imageData.naturalHeight
+    );
+
+    theViewer.current?.moveTo(
+      theViewer.current?.containerData.width/2-theViewer.current?.imageData.width/2,
+      0
+    );
 
     if (!initial)
     {
-      this.setState({
-        statusText:"Fit Height"
-      });
+      setStatusText("Fit Height");
     }
   }
 
   //navigate to the given image index
-  navigateImage(imgIndex:number):void
+  function navigateImage(imgIndex:number):void
   {
-    if (imgIndex>=this.state.imgs.length || imgIndex<0)
+    if (imgIndex>=theImgs.length || imgIndex<0)
     {
       return;
     }
 
-    var currentimage=this.state.currentImage;
+    var currentimage=theCurrentImage;
     if (!currentimage)
     {
-      currentimage=this.state.imgs[0];
+      currentimage=theImgs[0];
     }
 
     // console.log(currentimage);
-    // console.log(this.theviewer);
+    // console.log(theViewer.current?);
 
-    if (!this.imageChangeInProgress)
+    if (!imageChangeInProgress.current)
     {
-      currentimage.zoom=this.theviewer.imageData.ratio;
-      currentimage.left=this.theviewer.imageData.left;
-      currentimage.top=this.theviewer.imageData.top;
+      currentimage.zoom=theViewer.current?.imageData.ratio;
+      currentimage.left=theViewer.current?.imageData.left;
+      currentimage.top=theViewer.current?.imageData.top;
     }
 
-    this.imageChangeInProgress=true;
-    var newimage:ImageObject=this.state.imgs[imgIndex];
-    this.setState({
-      currentImage:newimage,
-      currentImageIndex:imgIndex,
-      statusText:newimage.link
-    });
+    imageChangeInProgress.current=true;
+    var newimage:ImageObject=theImgs[imgIndex];
+
+    setCurrentImage(newimage);
+    setCurrentImageIndex(imgIndex);
+    setStatusText(newimage.link);
   }
 
   /** toggle viewer transitions */
-  toggleTransitionMode():void
+  function toggleTransitionMode():void
   {
-    this.transitions=!this.transitions;
-    this.theviewer.options.transition=this.transitions;
+    transitions.current=!transitions.current;
+    theViewer.current!.options.transition=transitions.current;
 
-    var transitionText:string=this.transitions?"ON":"OFF";
+    var transitionText:string=transitions.current?"ON":"OFF";
 
-    this.setState({
-      statusText:`set transitions ${transitionText}`
-    });
+    setStatusText(`set transitions ${transitionText}`);
   }
 
   //deploy global keyboard controls
-  keyControl():void
+  function keyControl():void
   {
     document.addEventListener("keydown",(e:KeyboardEvent)=>{
       // console.log(e.key);
       if (e.key!="f")
       {
-        this.justFitHeight=false;
+        justFitHeight.current=false;
       }
 
       if (e.key=="e")
       {
-        this.theviewer.zoom(.1,true);
+        theViewer.current?.zoom(.1,true);
       }
 
       else if (e.key=="q")
       {
-        this.theviewer.zoom(-.1,true);
+        theViewer.current?.zoom(-.1,true);
       }
 
       else if (e.key=="ArrowRight" || e.key==" " || e.key=="d")
       {
-        this.navigateImage(this.state.currentImageIndex+1);
+        navigateImage(theCurrentImageIndex+1);
       }
 
       else if (e.key=="ArrowLeft" || e.key=="a")
       {
-        this.navigateImage(this.state.currentImageIndex-1);
+        navigateImage(theCurrentImageIndex-1);
       }
 
       else if (e.key=="f")
       {
-        if (this.justFitHeight)
+        if (justFitHeight.current)
         {
-          this.fitWidth();
-          this.justFitHeight=false;
+          fitWidth();
+          justFitHeight.current=false;
         }
 
         else
         {
-          this.fitHeight();
-          this.justFitHeight=true;
+          fitHeight();
+          justFitHeight.current=true;
         }
       }
 
       else if (e.key=="Escape")
       {
-        this.setState({
-          panelShowing:!this.state.panelShowing
-        });
+        setPanelShowing(!panelShowing);
       }
 
       else if (e.key=="t")
       {
-        this.toggleTransitionMode();
+        toggleTransitionMode();
       };
     });
   }
 
   // deploy timer for executing mouse hides
-  mouseHider():void
+  function mouseHider():void
   {
     // every 1 second, increment the hide timer. when the hide timer reaches
     // 5, and the mouse is currently not hidden, hide the mouse
     setInterval(()=>{
-      this.hideTimer++;
+      hideTimer.current++;
 
-      if (this.hideTimer>=3 && !this.state.mouseHidden)
+      if (hideTimer.current>=3 && !mouseHidden)
       {
-        this.setState({
-          mouseHidden:true
-        });
+        setMouseHidden(true);
       }
     },1000);
 
     // every time the mouse moves, set the hide timer back to 0. if the mouse was
     // hidden, unhide it.
     document.addEventListener("mousemove",()=>{
-      this.hideTimer=0;
+      hideTimer.current=0;
 
-      if (this.state.mouseHidden)
+      if (mouseHidden)
       {
-        this.setState({
-          mouseHidden:false
-        });
+        setMouseHidden(false);
       }
     });
   }
 
   // given array of valid urls, set the imgs to those urls
-  linksLoad(urls:string[]):void
+  function linksLoad(urls:string[]):void
   {
     var imgs:ImageObject[]=_.map(urls,(x:string)=>{
       return {
@@ -312,11 +300,9 @@ class EhViewerMain extends React.Component
       };
     });
 
-    this.setState({imgs},()=>{
-      this.navigateImage(0);
-    });
+    setImgs(imgs);
 
-    this.thumbnails=_.map(urls,(x:string)=>{
+    thumbnails.current=_.map(urls,(x:string)=>{
       var match=x.match(/\/imagedata(.*)/);
       if (match && match[1])
       {
@@ -330,54 +316,52 @@ class EhViewerMain extends React.Component
   }
 
   // toggle preview panel showing state
-  togglePanelShowing():void
+  function togglePanelShowing():void
   {
-    this.setState({panelShowing:!this.state.panelShowing});
+    setPanelShowing(!panelShowing);
   }
 
-  render()
+  /** --- RENDER --- */
+  if (theViewer.current)
   {
-    if (this.theviewer)
-    {
-      this.theviewer.view(this.state.currentImageIndex);
-    }
-
-    var videoMode:boolean=false;
-    if (this.state.currentImage && isVideo(this.state.currentImage.link))
-    {
-      videoMode=true;
-    }
-
-    const viewerClasses={
-      "mouse-hide":this.state.mouseHidden,
-      "video-mode":videoMode
-    };
-
-    return <>
-      <StatusIndicator text={this.state.statusText}/>
-
-      <div className={cx("the-viewer",viewerClasses)}>
-        <ul ref={this.theviewerElement}>
-          {_.map(this.state.imgs,(x:ImageObject,i:number)=>{
-            var link:string=x.link;
-
-            if (isVideo(link))
-            {
-              link="";
-            }
-
-            return <li key={i}><img src={link} loading="lazy"/></li>;
-          })}
-        </ul>
-
-        <VideoView src={this.state.currentImage?.link}/>
-      </div>
-
-      <PreviewPanel thumbnails={this.thumbnails} currentImageIndex={this.state.currentImageIndex}
-        showing={this.state.panelShowing} navigateImage={this.navigateImage}
-        togglePanelShowing={this.togglePanelShowing}/>
-    </>;
+    theViewer.current?.view(theCurrentImageIndex);
   }
+
+  var videoMode:boolean=false;
+  if (theCurrentImage && isVideo(theCurrentImage.link))
+  {
+    videoMode=true;
+  }
+
+  const viewerClasses={
+    "mouse-hide":mouseHidden,
+    "video-mode":videoMode
+  };
+
+  return <>
+    <StatusIndicator text={theStatusText}/>
+
+    <div className={cx("the-viewer",viewerClasses)}>
+      <ul ref={theViewerElement}>
+        {_.map(theImgs,(x:ImageObject,i:number)=>{
+          var link:string=x.link;
+
+          if (isVideo(link))
+          {
+            link="";
+          }
+
+          return <li key={i}><img src={link} loading="lazy"/></li>;
+        })}
+      </ul>
+
+      <VideoView src={theCurrentImage?.link}/>
+    </div>
+
+    <PreviewPanel thumbnails={thumbnails.current} currentImageIndex={theCurrentImageIndex}
+      showing={panelShowing} navigateImage={navigateImage}
+      togglePanelShowing={togglePanelShowing}/>
+  </>;
 }
 
 // retrieve images from a specified album path

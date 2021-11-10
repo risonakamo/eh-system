@@ -6,7 +6,7 @@ import chalk from "chalk";
 
 import {getImagesInPath2Flat} from "./imagedata-service";
 import {getAlbumInfo} from "./album-service";
-import {generateThumbnailsWrap} from "../thumbnail-manager/mngthumbnail";
+import {generateThumbnailsWrap} from "./thumbnail-manager/mngthumbnail";
 
 const _batchSize:number=6;
 const _defaultImageDir="../../../../h/cg";
