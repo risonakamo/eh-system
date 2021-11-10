@@ -2,11 +2,15 @@
     "compilerOptions":{
         "strict":true,
         "jsx":"react",
-        "target": "ESNext",
         "lib":["dom","ESNext"],
+        "target":"ESNext",
         "esModuleInterop":true,
-        "strictPropertyInitialization": false,
-        "moduleResolution": "node"
+        "baseUrl":".",
+        "moduleResolution":"node",
+        "paths": {
+            "components/*":["web/components/*"],
+            "lib/*":["web/lib/*"]
+        }
     },
     "include":[
         "**/*.ts",

@@ -11,8 +11,8 @@ module.exports=(env)=>{
     return {
         mode,
         entry:{
-            ehviewer:"./ehviewer/ehviewer-index.tsx",
-            abexplore:"./albumexplore/abexplore-router.tsx"
+            ehviewer:"./web/pages/ehviewer/ehviewer-index.tsx",
+            abexplore:"./web/pages/albumexplore/abexplore-router.tsx"
         },
         output:{
             path:`${__dirname}/build`,
@@ -56,14 +56,18 @@ module.exports=(env)=>{
         ],
 
         resolve:{
-            extensions:[".tsx",".ts",".jsx",".js"]
+            extensions:[".tsx",".ts",".jsx",".js"],
+            alias:{
+                css:`${__dirname}/web/css`,
+                components:`${__dirname}/web/components`,
+                lib:`${__dirname}/web/lib`
+            }
         },
 
         stats:{
             entrypoints:false,
             modules:false,
-            chunks:false,
-            assets:false
+            chunks:false
         },
 
         devtool:"eval-source-map"

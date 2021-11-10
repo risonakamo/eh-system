@@ -2,7 +2,7 @@
     "compilerOptions":{
         "strict":true,
         "outDir":"node-build",
-        "target": "ESNext",
+        "target":"ESNext",
         "lib":["ESNext","DOM"],
         "module":"commonjs",
         "esModuleInterop":true

@@ -1,0 +1,87 @@
+@fade-background: rgba(31, 31, 31, 0.4);
+@iga-salmon: #ea4f5f;
+@imgur-green: #1bb76e;
+
+.preview-panel
+{
+    position: absolute;
+    display: flex;
+    max-height: 100vh;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 2018;
+    font-size: 0;
+    padding: 16px 20px 20px 20px;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    background-color: @fade-background;
+    box-sizing: border-box;
+    overflow: auto;
+
+    &.hidden
+    {
+        display: none;
+    }
+
+    .thumbnail
+    {
+        position: relative;
+        width: 160px;
+        height: 160px;
+        margin: 5px;
+        border-radius: 3px;
+        user-select: none;
+        cursor: pointer;
+        overflow: hidden;
+
+        &:hover
+        {
+            .select-border
+            {
+                opacity: 1;
+            }
+        }
+
+        &.selected
+        {
+            .select-border
+            {
+                border-color: @imgur-green;
+                opacity: 1;
+            }
+        }
+
+        .select-border
+        {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            border: 4px solid @iga-salmon;
+            box-sizing: border-box;
+            border-radius: 3px;
+            opacity: 0;
+        }
+
+        img
+        {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 3px;
+        }
+    }
+
+    .header
+    {
+        height: 58px;
+        width: 100%;
+
+        .home-icon
+        {
+
+        }
+    }
+}

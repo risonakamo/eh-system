@@ -1,0 +1,35 @@
+@fade-delay: 1s;
+@fade-time: 2s;
+
+.status-indicator
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: black;
+    color: white;
+    font-size: 14px;
+    z-index: 2017;
+    padding: 4px 4px 0 4px;
+
+    &.fade-out
+    {
+        animation-name: fade-out;
+        animation-duration: @fade-time;
+        animation-delay: @fade-delay;
+        animation-fill-mode: forwards;
+
+        @keyframes fade-out
+        {
+            from
+            {
+                opacity: 1;
+            }
+
+            to
+            {
+                opacity: 0;
+            }
+        }
+    }
+}
