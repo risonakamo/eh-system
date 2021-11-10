@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useRef} from "react";
 
 interface PreviewThumbnailProps
 {
@@ -10,44 +10,32 @@ interface PreviewThumbnailProps
   togglePanelShowing():void
 }
 
-export default class PreviewThumbnail extends React.Component
+export default function PreviewThumbnail(props:PreviewThumbnailProps):JSX.Element
 {
-  props:PreviewThumbnailProps
-  element:RefObject<HTMLAnchorElement>
-
-  constructor(props:PreviewThumbnailProps)
-  {
-    super(props);
-    this.navigateAction=this.navigateAction.bind(this);
-    this.closePanelAction=this.closePanelAction.bind(this);
-    this.element=React.createRef();
-  }
+  const theElement=useRef<HTMLAnchorElement>(null);
 
   /** scroll this thumbnail element into view */
-  public scrollIntoView():void
+  function scrollIntoView():void
   {
-    this.element.current?.scrollIntoView({
+    theElement.current?.scrollIntoView({
       block:"center"
     });
   }
 
   // click action, use navigate image
-  private navigateAction()
+  function navigateAction():void
   {
-    this.props.navigateImage(this.props.indexNumber);
+    props.navigateImage(props.indexNumber);
   }
 
-  private closePanelAction()
+  function closePanelAction():void
   {
-    this.props.togglePanelShowing();
+    props.togglePanelShowing();
   }
 
-  render()
-  {
-    return <a className={`thumbnail ${this.props.selected?"selected":""}`} onClick={this.navigateAction}
-      onDoubleClick={this.closePanelAction} ref={this.element}>
-      <img src={this.props.thumbnailurl}/>
-      <div className="select-border"></div>
-    </a>;
-  }
+  return <a className={`thumbnail ${props.selected?"selected":""}`} onClick={navigateAction}
+    onDoubleClick={closePanelAction} ref={theElement}>
+    <img src={props.thumbnailurl}/>
+    <div className="select-border"></div>
+  </a>;
 }

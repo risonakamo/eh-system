@@ -10,28 +10,23 @@ interface SasButtonProps
   routerLink?:boolean
 }
 
-export default class SasButton extends React.Component
+export default function SasButton(props:SasButtonProps):JSX.Element
 {
-  props:SasButtonProps
+  var className:string=props.className || "";
 
-  render()
+  var innerContent:JsxElement=<>
+    <img className="pink" src="/assets/imgs/icon-pink.png"/>
+    <img className="white" src="/assets/imgs/icon-white.png"/>
+  </>;
+
+  if (props.routerLink)
   {
-    var className:string=this.props.className || "";
-
-    var innerContent:JsxElement=<>
-      <img className="pink" src="/assets/imgs/icon-pink.png"/>
-      <img className="white" src="/assets/imgs/icon-white.png"/>
-    </>;
-
-    if (this.props.routerLink)
-    {
-      return <Link to={this.props.href} className={`sas-icon ${className}`}>
-        {innerContent}
-      </Link>;
-    }
-
-    return <a className={`sas-icon ${className}`} href={this.props.href}>
+    return <Link to={props.href} className={`sas-icon ${className}`}>
       {innerContent}
-    </a>;
+    </Link>;
   }
+
+  return <a className={`sas-icon ${className}`} href={props.href}>
+    {innerContent}
+  </a>;
 }

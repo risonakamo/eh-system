@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useRef,useEffect} from "react";
 import _ from "lodash";
 
 import SasButton from "components/sas-button/sasbutton";
@@ -15,47 +15,21 @@ interface PreviewPanelProps
   togglePanelShowing():void //function to close the panel
 }
 
-export default class PreviewPanel extends React.PureComponent
+export default function PreviewPanel(props:PreviewPanelProps):JSX.Element
 {
-  props:PreviewPanelProps
-  currentThumbnail:RefObject<PreviewThumbnail>
+  /** --- RENDER --- */
+  var thumbnails=_.map(props.thumbnails,(x:string,i:number)=>{
+    var selected=props.currentImageIndex==i?true:false;
 
-  constructor(props:PreviewPanelProps)
-  {
-    super(props);
+    return <PreviewThumbnail thumbnailurl={x} key={i} selected={selected}
+      indexNumber={i} navigateImage={props.navigateImage}
+      togglePanelShowing={props.togglePanelShowing}/>;
+  });
 
-    this.currentThumbnail=React.createRef();
-  }
-
-  componentDidUpdate(prevProps:PreviewPanelProps):void
-  {
-    if (!prevProps.showing && this.props.showing)
-    {
-      this.currentThumbnail.current?.scrollIntoView();
-    }
-  }
-
-  render()
-  {
-    var thumbnails=_.map(this.props.thumbnails,(x:string,i:number)=>{
-      var selected=this.props.currentImageIndex==i?true:false;
-
-      var ref:RefObject<PreviewThumbnail>|undefined;
-      if (selected)
-      {
-        ref=this.currentThumbnail;
-      }
-
-      return <PreviewThumbnail thumbnailurl={x} key={i} selected={selected}
-        indexNumber={i} navigateImage={this.props.navigateImage} ref={ref}
-        togglePanelShowing={this.props.togglePanelShowing}/>;
-    });
-
-    return <div className={`preview-panel ${this.props.showing?"":"hidden"}`}>
-      <div className="header">
-        <SasButton href="/" className="home-icon"/>
-      </div>
-      {thumbnails}
-    </div>;
-  }
+  return <div className={`preview-panel ${props.showing?"":"hidden"}`}>
+    <div className="header">
+      <SasButton href="/" className="home-icon"/>
+    </div>
+    {thumbnails}
+  </div>;
 }
