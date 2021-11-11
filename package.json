@@ -3,6 +3,7 @@
   "version": "2.4.0",
   "scripts": {
     "build": "webpack",
+    "watch":"webpack --watch",
     "build-server": "tsc --project tsconfig-node.json",
     "run-server": "node node-build/server",
     "dev-server": "npm run build-server && npm run run-server"

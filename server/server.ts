@@ -9,9 +9,9 @@ import {getAlbumInfo} from "./album-service";
 import {generateThumbnailsWrap} from "./thumbnail-manager/mngthumbnail";
 
 const _batchSize:number=6;
-const _defaultImageDir="../../../../h/cg";
+const _defaultImageDir=`C:/Users/ktkm/Desktop/h/cg`;
 const _port:number=81;
-const _staticServing:boolean=false;
+const _staticServing:boolean=true;
 
 function main()
 {
@@ -19,9 +19,9 @@ function main()
 
     // path to image data directory, relative to this server file.
     const imageDataDir:string=args.flags.path;
-    const thumbnailDataDir:string="../../thumbnaildata";
+    const thumbnailDataDir:string="../thumbnaildata";
 
-    const fullImageDataDir:string=join(__dirname,imageDataDir);
+    const fullImageDataDir:string=imageDataDir;
     const fullThumbnailDataDir:string=join(__dirname,thumbnailDataDir);
 
     const app=express();
@@ -30,22 +30,22 @@ function main()
     if (_staticServing)
     {
         // eh viewer page
-        app.use("/viewer/*",express.static(`${__dirname}/../../ehviewer`));
+        app.use("/viewer/*",express.static(`${__dirname}/../web/pages/ehviewer`));
 
         // album explore page
-        app.use("/albums*",express.static(`${__dirname}/../../albumexplore`));
+        app.use("/albums*",express.static(`${__dirname}/../web/pages/albumexplore`));
         app.use("//",(req,res)=>{
             res.redirect("/albums");
         });
 
         // web page combined build folder
-        app.use("/build",express.static(`${__dirname}/../../build`));
+        app.use("/build",express.static(`${__dirname}/../build`));
 
         // fonts folder
-        app.use("/assets/fonts",express.static(`${__dirname}/../../fonts`));
+        app.use("/assets/fonts",express.static(`${__dirname}/../web/assets/fonts`));
 
         // img assets folder
-        app.use("/assets/imgs",express.static(`${__dirname}/../../imgs`));
+        app.use("/assets/imgs",express.static(`${__dirname}/../web/assets/imgs`));
 
         // image data directory
         app.use("/imagedata",express.static(fullImageDataDir));

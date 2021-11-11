@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useState,useEffect,useRef} from "react";
 import _ from "lodash";
 
 import AlbumTile from "components/album-tile/albumtile";
@@ -18,9 +18,24 @@ interface AbExploreProps
   history:RouterHistory
 }
 
-export default function AbExploreMain2(props:AbExploreProps):JSX.Element
+export default function AbExploreMain(props:AbExploreProps):JSX.Element
 {
   const [theAlbumItems,setAlbumItems]=useState<AlbumInfo[]>([]);
+
+  const prevTargetPath=useRef<string>("");
+
+  // navigate to / on startup
+  useEffect(()=>{
+    changeTargetPath(props.match.params.targetpath || "");
+  },[]);
+
+  // call change target path on target path change
+  useEffect(()=>{
+    if (prevTargetPath.current!=props.match.params.targetpath)
+    {
+      changeTargetPath(props.match.params.targetpath || "");
+    }
+  },[props.match.params.targetpath]);
 
   /** ---- MEMBERS ---- */
   // navigate ab explore to a new target
