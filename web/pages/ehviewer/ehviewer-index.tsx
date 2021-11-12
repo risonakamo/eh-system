@@ -54,6 +54,7 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
 
 
   /** --- EFFECTS --- */
+  // initialise viewer, key handler, mouse hider. load the album and set the title.
   useEffect(()=>{
     (async ()=>{
       theViewer.current=new Viewer(theViewerElement.current as HTMLElement,{
@@ -121,7 +122,8 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
     fitWidth,
     fitHeight,
     toggleTransitionMode,
-    theCurrentImageIndex
+    theCurrentImageIndex,
+    mouseHidden
   });
 
   useEffect(()=>{
@@ -130,7 +132,8 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
     syncCallbacks.current.fitHeight=fitHeight;
     syncCallbacks.current.toggleTransitionMode=toggleTransitionMode;
     syncCallbacks.current.theCurrentImageIndex=theCurrentImageIndex;
-  },[navigateImage,fitWidth,fitHeight,toggleTransitionMode,theCurrentImageIndex]);
+    syncCallbacks.current.mouseHidden=mouseHidden;
+  },[navigateImage,fitWidth,fitHeight,toggleTransitionMode,theCurrentImageIndex,mouseHidden]);
 
 
   /** --- METHODS --- */
@@ -282,7 +285,7 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
     setInterval(()=>{
       hideTimer.current++;
 
-      if (hideTimer.current>=3 && !mouseHidden)
+      if (hideTimer.current>=3 && !syncCallbacks.current.mouseHidden)
       {
         setMouseHidden(true);
       }
@@ -293,7 +296,7 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
     document.addEventListener("mousemove",()=>{
       hideTimer.current=0;
 
-      if (mouseHidden)
+      if (syncCallbacks.current.mouseHidden)
       {
         setMouseHidden(false);
       }
