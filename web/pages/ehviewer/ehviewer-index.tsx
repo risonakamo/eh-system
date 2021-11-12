@@ -26,21 +26,6 @@ interface EhViewerProps
   match:RouterMatch //match from router
 }
 
-interface EhViewerState
-{
-  currentImage:ImageObject|null //the current showing image object
-
-  mouseHidden:boolean //when enabled, mouse is hidden
-
-  panelShowing:boolean
-
-  imgs:ImageObject[] //the images
-  currentImageIndex:number //the current image index
-
-  // current status indicator display text
-  statusText:string
-}
-
 export default function EhViewerMain(props:EhViewerProps):JSX.Element
 {
   /** --- STATES --- */
