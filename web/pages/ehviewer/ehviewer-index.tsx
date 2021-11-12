@@ -115,6 +115,24 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
   },[theCurrentImage,theImgs,theCurrentImageIndex]);
 
 
+  /** --- SYNC REFS --- */
+  const syncCallbacks=useRef({
+    navigateImage,
+    fitWidth,
+    fitHeight,
+    toggleTransitionMode,
+    theCurrentImageIndex
+  });
+
+  useEffect(()=>{
+    syncCallbacks.current.navigateImage=navigateImage;
+    syncCallbacks.current.fitWidth=fitWidth;
+    syncCallbacks.current.fitHeight=fitHeight;
+    syncCallbacks.current.toggleTransitionMode=toggleTransitionMode;
+    syncCallbacks.current.theCurrentImageIndex=theCurrentImageIndex;
+  },[navigateImage,fitWidth,fitHeight,toggleTransitionMode,theCurrentImageIndex]);
+
+
   /** --- METHODS --- */
   //do fit width on the viewer
   function fitWidth(initial:boolean=false):void
@@ -198,8 +216,10 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
   //deploy global keyboard controls
   function keyControl():void
   {
+    // DE-SYNC ZONE
     document.addEventListener("keydown",(e:KeyboardEvent)=>{
       // console.log(e.key);
+
       if (e.key!="f")
       {
         justFitHeight.current=false;
@@ -217,37 +237,39 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
 
       else if (e.key=="ArrowRight" || e.key==" " || e.key=="d")
       {
-        navigateImage(theCurrentImageIndex+1);
+        syncCallbacks.current.navigateImage(syncCallbacks.current.theCurrentImageIndex+1);
       }
 
       else if (e.key=="ArrowLeft" || e.key=="a")
       {
-        navigateImage(theCurrentImageIndex-1);
+        syncCallbacks.current.navigateImage(syncCallbacks.current.theCurrentImageIndex-1);
       }
 
       else if (e.key=="f")
       {
         if (justFitHeight.current)
         {
-          fitWidth();
+          syncCallbacks.current.fitWidth();
           justFitHeight.current=false;
         }
 
         else
         {
-          fitHeight();
+          syncCallbacks.current.fitHeight();
           justFitHeight.current=true;
         }
       }
 
       else if (e.key=="Escape")
       {
-        setPanelShowing(!panelShowing);
+        setPanelShowing((prev:boolean):boolean=>{
+          return !prev;
+        });
       }
 
       else if (e.key=="t")
       {
-        toggleTransitionMode();
+        syncCallbacks.current.toggleTransitionMode();
       };
     });
   }
