@@ -4,9 +4,9 @@ import {join} from "path";
 import meow from "meow";
 import chalk from "chalk";
 
-import {getImagesInPath2Flat} from "./imagedata-service";
-import {getAlbumInfo} from "./album-service";
-import {generateThumbnailsWrap} from "./thumbnail-manager/mngthumbnail";
+import {getImagesInPath2Flat} from "./lib/imagedata-service";
+import {getAlbumInfo} from "./lib/album-service";
+import {generateThumbnailsWrap} from "./lib/thumbnail-manager/mngthumbnail";
 
 const _batchSize:number=6;
 const _defaultImageDir=`C:/Users/ktkm/Desktop/h/cg`;

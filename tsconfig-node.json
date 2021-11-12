@@ -8,8 +8,7 @@
         "esModuleInterop":true
     },
     "include":[
-        "server/*.ts",
-        "thumbnail-manager/*.ts",
+        "server/**/*.ts",
         "**/*.d.ts"
     ],
     "exclude":[

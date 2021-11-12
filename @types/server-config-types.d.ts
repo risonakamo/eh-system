@@ -1,0 +1,4 @@
+interface ServerConfig
+{
+    imagedir:string
+}
