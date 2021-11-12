@@ -60,7 +60,8 @@ module.exports=(env)=>{
             alias:{
                 css:`${__dirname}/web/css`,
                 components:`${__dirname}/web/components`,
-                lib:`${__dirname}/web/lib`
+                lib:`${__dirname}/web/lib`,
+                api:`${__dirname}/web/api`
             }
         },
 

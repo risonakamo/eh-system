@@ -4,6 +4,8 @@ import _ from "lodash";
 import AlbumTile from "components/album-tile/albumtile";
 import AlbumMenu from "components/album-menu/album-menu";
 
+import {getAlbumInfo} from "api/album-api";
+
 import "css/abexplore-index.less";
 
 interface AbExploreProps
@@ -23,11 +25,6 @@ export default function AbExploreMain(props:AbExploreProps):JSX.Element
   const [theAlbumItems,setAlbumItems]=useState<AlbumInfo[]>([]);
 
   const prevTargetPath=useRef<string>("");
-
-  // navigate to / on startup
-  useEffect(()=>{
-    changeTargetPath(props.match.params.targetpath || "");
-  },[]);
 
   // call change target path on target path change
   useEffect(()=>{
@@ -145,15 +142,6 @@ export default function AbExploreMain(props:AbExploreProps):JSX.Element
       })}
     </div>
   </>;
-}
-
-// get album info for a path
-async function getAlbumInfo(target:string):Promise<AlbumInfo[]>
-{
-  return (await fetch("/get-album-info",{
-    method:"POST",
-    body:target
-  })).json();
 }
 
 // create an albumtile for an album info. give it the current path, with no slash at the begining

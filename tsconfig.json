@@ -9,7 +9,8 @@
         "moduleResolution":"node",
         "paths": {
             "components/*":["web/components/*"],
-            "lib/*":["web/lib/*"]
+            "lib/*":["web/lib/*"],
+            "api/*":["web/api/*"]
         }
     },
     "include":[

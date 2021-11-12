@@ -9,6 +9,8 @@ import PreviewPanel from "components/previewpanel/previewpanel";
 import VideoView,{isVideo} from "components/video-view/videoview";
 import StatusIndicator from "components/status-indicator/status-indicator";
 
+import {requestAlbum} from "api/album-api";
+
 import "./ehviewer-index.less";
 import "viewerjs/dist/viewer.css";
 
@@ -362,15 +364,6 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
       showing={panelShowing} navigateImage={navigateImage}
       togglePanelShowing={togglePanelShowing}/>
   </>;
-}
-
-// retrieve images from a specified album path
-async function requestAlbum(path:string):Promise<string[]>
-{
-  return (await fetch("/get-album",{
-    method:"POST",
-    body:path
-  })).json();
 }
 
 // set the page title given album path
