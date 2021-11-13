@@ -72,12 +72,12 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
           imageChangeInProgress.current=false;
 
           // if the current image has zoom and other custom values set, set the zoom the the values
-          if (_.get(theCurrentImage,"zoom"))
+          if (_.get(syncCallbacks.current.theCurrentImage,"zoom"))
           {
-            theViewer.current?.zoomTo(theCurrentImage!.zoom);
+            theViewer.current?.zoomTo(syncCallbacks.current.theCurrentImage!.zoom);
             theViewer.current.moveTo(
-              theCurrentImage!.left,
-              theCurrentImage!.top
+              syncCallbacks.current.theCurrentImage!.left,
+              syncCallbacks.current.theCurrentImage!.top
             );
           }
 
@@ -123,7 +123,8 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
     fitHeight,
     toggleTransitionMode,
     theCurrentImageIndex,
-    mouseHidden
+    mouseHidden,
+    theCurrentImage
   });
 
   useEffect(()=>{
@@ -133,7 +134,8 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
     syncCallbacks.current.toggleTransitionMode=toggleTransitionMode;
     syncCallbacks.current.theCurrentImageIndex=theCurrentImageIndex;
     syncCallbacks.current.mouseHidden=mouseHidden;
-  },[navigateImage,fitWidth,fitHeight,toggleTransitionMode,theCurrentImageIndex,mouseHidden]);
+    syncCallbacks.current.theCurrentImage=theCurrentImage;
+  },[navigateImage,fitWidth,fitHeight,toggleTransitionMode,theCurrentImageIndex,mouseHidden,theCurrentImage]);
 
 
   /** --- METHODS --- */
