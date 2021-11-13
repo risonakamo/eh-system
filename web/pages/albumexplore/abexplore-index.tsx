@@ -125,7 +125,7 @@ export default function AbExploreMain(props:AbExploreProps):JSX.Element
   /** push history and page navigate to url */
   function hardNavigate(url:string):void
   {
-    props.history.push(".");
+    window.history.pushState("","",".");
     window.location.replace(url);
   }
 
