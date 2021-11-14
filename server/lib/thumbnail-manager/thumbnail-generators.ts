@@ -29,7 +29,15 @@ async function generateThumbnailsNoChunk(jobs:ThumbnailGenJob[]):Promise<void[]>
             return generateVideoThumbnail(x.fullPath,x.thumbnailPath);
         }
 
-        return generateImageThumbnail(x.fullPath,x.thumbnailPath);
+        else if (isImageExt(x.originalExt))
+        {
+            return generateImageThumbnail(x.fullPath,x.thumbnailPath);
+        }
+
+        else
+        {
+            console.log(chalk.red("unsupported img format, skipping"));
+        }
     }));
 }
 
@@ -105,5 +113,27 @@ function isVideo(path:string,noExtract:boolean=false):boolean
 /** determine if an extension only is a video or not */
 function isVideoExt(ext:string):boolean
 {
-    return ext==".mp4" || ext==".webm";
+    switch (ext)
+    {
+        case ".mp4":
+        case ".webm":
+        case ".avi":
+        return true;
+    }
+
+    return false;
+}
+
+/** determine if img is supported img extension */
+function isImageExt(ext:string):boolean
+{
+    switch (ext)
+    {
+        case ".png":
+        case ".jpg":
+        case ".gif":
+        return true;
+    }
+
+    return false;
 }

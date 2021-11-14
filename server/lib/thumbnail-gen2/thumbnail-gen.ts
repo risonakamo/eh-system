@@ -6,6 +6,25 @@ import {access} from "fs/promises";
 
 import {generateThumbnails} from "../thumbnail-manager/thumbnail-generators";
 
+/** generate all missing thumbnails for a target directory */
+export async function generatedNeededThumbnails(inputdir:string,outputdir:string,batchsize:number=5)
+:Promise<void>
+{
+    // initial calculation of all input files in the input dir
+    const inputtargets:TargetItem[]=await getTargetFiles(inputdir);
+
+    // resolve thumbnail output paths and prune to only thumbnails that need to be generated
+    const gentargets:ThumbnailTargetItem[]=await determineThumbnailsNeedGeneration(
+        resolveThumbnailPaths(inputtargets,outputdir)
+    );
+
+    // convert gen targets to proper input object and perform generation
+    generateThumbnails(
+        thumbnailTargetItemsToGenJobs(gentargets),
+        batchsize
+    );
+}
+
 /** resolve information for all items recursively in target directory */
 async function getTargetFiles(inputdir:string):Promise<TargetItem[]>
 {
@@ -79,17 +98,7 @@ function thumbnailTargetItemsToGenJobs(thumbnailtargets:ThumbnailTargetItem[]):T
 
 function main()
 {
-    getTargetFiles("C:/Users/ktkm/Desktop/h/3d/nagoo").then(async (res:TargetItem[])=>{
-        // target items that need thumbnails generated for
-        const gentargets:ThumbnailTargetItem[]=await determineThumbnailsNeedGeneration(
-            resolveThumbnailPaths(res,"./thumbnaildata/nagoo")
-        );
-
-        generateThumbnails(
-            thumbnailTargetItemsToGenJobs(gentargets),
-            5
-        );
-    });
+    generatedNeededThumbnails("C:/Users/ktkm/Desktop/h/cg","./thumbnaildata");
 }
 
 main();
