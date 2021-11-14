@@ -1,8 +1,10 @@
 import recursiveDir from "recursive-readdir";
 import normalise from "normalize-path";
 import _ from "lodash";
-import {relative,resolve,join,parse} from "path";
+import {relative,resolve,join,parse,extname} from "path";
 import {access} from "fs/promises";
+
+import {generateThumbnails} from "../thumbnail-manager/thumbnail-generators";
 
 /** resolve information for all items recursively in target directory */
 async function getTargetFiles(inputdir:string):Promise<TargetItem[]>
@@ -59,10 +61,34 @@ async function determineThumbnailsNeedGeneration(thumbnailtargets:ThumbnailTarge
     return _.filter(await Promise.all(existCheck)) as ThumbnailTargetItem[];
 }
 
+/** convert thumbnail target items to gen jobs usable by thumbnail-generators library. some fields are
+ *  left out because they are not needed by thumbnail-generators */
+function thumbnailTargetItemsToGenJobs(thumbnailtargets:ThumbnailTargetItem[]):ThumbnailGenJob[]
+{
+    return _.map(thumbnailtargets,(x:ThumbnailTargetItem):ThumbnailGenJob=>{
+        return {
+            relPath:"",
+            thumbnailDir:"",
+
+            fullPath:x.originalpath,
+            thumbnailPath:x.thumbnailpath,
+            originalExt:extname(x.originalpath)
+        };
+    });
+}
+
 function main()
 {
     getTargetFiles("C:/Users/ktkm/Desktop/h/3d/nagoo").then(async (res:TargetItem[])=>{
-        console.log(await determineThumbnailsNeedGeneration(resolveThumbnailPaths(res,"./thumbnaildata/nagoo")));
+        // target items that need thumbnails generated for
+        const gentargets:ThumbnailTargetItem[]=await determineThumbnailsNeedGeneration(
+            resolveThumbnailPaths(res,"./thumbnaildata/nagoo")
+        );
+
+        generateThumbnails(
+            thumbnailTargetItemsToGenJobs(gentargets),
+            5
+        );
     });
 }
 
