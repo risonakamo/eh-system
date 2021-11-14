@@ -7,18 +7,16 @@ import chalk from "chalk";
 import {getImagesInPath2Flat} from "./lib/imagedata-service";
 import {getAlbumInfo} from "./lib/album-service";
 import {generateThumbnailsWrap} from "./lib/thumbnail-manager/mngthumbnail";
+import {getServerConfig} from "./lib/server-config";
 
 const _batchSize:number=6;
-const _defaultImageDir=`C:/Users/ktkm/Desktop/h/cg`;
-const _port:number=81;
-const _staticServing:boolean=true;
 
 function main()
 {
-    const args:ServerArgs=getArgs();
+    const serverConfig:ServerConfig=getServerConfig();
 
     // path to image data directory, relative to this server file.
-    const imageDataDir:string=args.flags.path;
+    const imageDataDir:string=serverConfig.imagedir;
     const thumbnailDataDir:string="../thumbnaildata";
 
     const fullImageDataDir:string=imageDataDir;
@@ -27,7 +25,7 @@ function main()
     const app=express();
 
     // --- static serving ---
-    if (_staticServing)
+    if (serverConfig.static_serve)
     {
         // eh viewer page
         app.use("/viewer/*",express.static(`${__dirname}/../web/pages/ehviewer`));
@@ -100,23 +98,23 @@ function main()
     });
     // --- end apis ---
 
-    app.listen(_port,()=>{
+    app.listen(serverConfig.port,()=>{
         console.log(chalk.green("EH-SYSTEM started"));
     });
 }
 
-function getArgs():ServerArgs
-{
-    return meow({
-        flags:{
-            // path to image data dir
-            path:{
-                type:"string",
-                default:_defaultImageDir
-            }
-        },
-        help:`--path: specify path to target image data directory, relative to the eh-system build folder`
-    });
-}
+// function getArgs_dep():ServerArgs
+// {
+//     return meow({
+//         flags:{
+//             // path to image data dir
+//             path:{
+//                 type:"string",
+//                 default:_defaultImageDir
+//             }
+//         },
+//         help:`--path: specify path to target image data directory, relative to the eh-system build folder`
+//     });
+// }
 
 main();

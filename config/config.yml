@@ -1,0 +1,4 @@
+imagedir: C:\Users\ktkm\Desktop\h\cg
+
+port: 81
+static_serve: true

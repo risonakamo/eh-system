@@ -6,5 +6,5 @@ import {join} from "path";
  *  config.yml */
 export function getServerConfig():ServerConfig
 {
-    return load(readFileSync(join(__dirname,"../config/config.yml"),"utf8")) as ServerConfig;
+    return load(readFileSync(join(__dirname,"../../config/config.yml"),"utf8")) as ServerConfig;
 }
