@@ -1,4 +1,7 @@
+# relative paths relative to where node is called (usually will be the top level of the repo)
 imagedir: C:\Users\ktkm\Desktop\h\cg
+thumbnaildir: ./thumbnaildata
 
-port: 81
+port: 80
 static_serve: true
+thumbnail_gen_batch: 6

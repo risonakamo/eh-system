@@ -1,26 +1,17 @@
 import express from "express";
 import serveIndex from "serve-index";
-import {join} from "path";
-import meow from "meow";
 import chalk from "chalk";
 
 import {getImagesInPath2Flat} from "./lib/imagedata-service";
 import {getAlbumInfo} from "./lib/album-service";
-import {generateThumbnailsWrap} from "./lib/thumbnail-manager/mngthumbnail";
 import {getServerConfig} from "./lib/server-config";
-
-const _batchSize:number=6;
 
 function main()
 {
     const serverConfig:ServerConfig=getServerConfig();
 
-    // path to image data directory, relative to this server file.
-    const imageDataDir:string=serverConfig.imagedir;
-    const thumbnailDataDir:string="../thumbnaildata";
-
-    const fullImageDataDir:string=imageDataDir;
-    const fullThumbnailDataDir:string=join(__dirname,thumbnailDataDir);
+    const fullImageDataDir:string=serverConfig.imagedir;
+    const fullThumbnailDataDir:string=serverConfig.thumbnaildir;
 
     const app=express();
 
@@ -77,21 +68,9 @@ function main()
 
     app.listen(serverConfig.port,()=>{
         console.log(chalk.green("EH-SYSTEM started"));
+        console.log("image dir:",chalk.yellow(fullImageDataDir));
+        console.log("thumbnail dir:",chalk.yellow(fullThumbnailDataDir));
     });
 }
-
-// function getArgs_dep():ServerArgs
-// {
-//     return meow({
-//         flags:{
-//             // path to image data dir
-//             path:{
-//                 type:"string",
-//                 default:_defaultImageDir
-//             }
-//         },
-//         help:`--path: specify path to target image data directory, relative to the eh-system build folder`
-//     });
-// }
 
 main();
