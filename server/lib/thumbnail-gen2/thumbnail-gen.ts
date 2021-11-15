@@ -95,10 +95,3 @@ function thumbnailTargetItemsToGenJobs(thumbnailtargets:ThumbnailTargetItem[]):T
         };
     });
 }
-
-function main()
-{
-    generatedNeededThumbnails("C:/Users/ktkm/Desktop/h/cg","./thumbnaildata");
-}
-
-main();
