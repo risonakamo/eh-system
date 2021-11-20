@@ -131,6 +131,7 @@ function isImageExt(ext:string):boolean
     {
         case ".png":
         case ".jpg":
+        case ".jpeg":
         case ".gif":
         return true;
     }

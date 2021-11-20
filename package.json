@@ -5,9 +5,9 @@
     "build": "webpack",
     "watch": "webpack --watch",
     "build-server": "tsc --project tsconfig-node.json",
-    "run-server": "node node-build/server",
+    "run-server": "node server-build/server",
     "dev-server": "npm run build-server && npm run run-server",
-    "run-gen-thumbnails":"node node-build/do-generate-thumbnails.js"
+    "run-gen-thumbnails":"node server-build/do-generate-thumbnails.js"
   },
   "dependencies": {
     "@babel/core": "^7.16.0",
