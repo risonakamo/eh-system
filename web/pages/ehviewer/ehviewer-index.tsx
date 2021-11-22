@@ -35,7 +35,7 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
   const [panelShowing,setPanelShowing]=useState<boolean>(false);
 
   const [theImgs,setImgs]=useState<ImageObject[]>([]);
-  const [theCurrentImageIndex,setCurrentImageIndex]=useState<number>(0);
+  const [theCurrentImageIndex,setCurrentImageIndex]=useState<number>(-1);
 
   const [theStatusText,setStatusText]=useState<string>("");
 
@@ -51,6 +51,28 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
   const thumbnails=useRef<string[]>([]);
 
   const transitions=useRef<boolean>(false);
+
+
+  /** --- SYNC REFS --- */
+  const syncCallbacks=useRef({
+    navigateImage,
+    fitWidth,
+    fitHeight,
+    toggleTransitionMode,
+    theCurrentImageIndex,
+    mouseHidden,
+    theCurrentImage
+  });
+
+  useEffect(()=>{
+    syncCallbacks.current.navigateImage=navigateImage;
+    syncCallbacks.current.fitWidth=fitWidth;
+    syncCallbacks.current.fitHeight=fitHeight;
+    syncCallbacks.current.toggleTransitionMode=toggleTransitionMode;
+    syncCallbacks.current.theCurrentImageIndex=theCurrentImageIndex;
+    syncCallbacks.current.mouseHidden=mouseHidden;
+    syncCallbacks.current.theCurrentImage=theCurrentImage;
+  },[navigateImage,fitWidth,fitHeight,toggleTransitionMode,theCurrentImageIndex,mouseHidden,theCurrentImage]);
 
 
   /** --- EFFECTS --- */
@@ -113,29 +135,8 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
   // update viewer on various state changes
   useEffect(()=>{
     theViewer.current?.update();
-  },[theCurrentImage,theImgs,theCurrentImageIndex]);
-
-
-  /** --- SYNC REFS --- */
-  const syncCallbacks=useRef({
-    navigateImage,
-    fitWidth,
-    fitHeight,
-    toggleTransitionMode,
-    theCurrentImageIndex,
-    mouseHidden,
-    theCurrentImage
-  });
-
-  useEffect(()=>{
-    syncCallbacks.current.navigateImage=navigateImage;
-    syncCallbacks.current.fitWidth=fitWidth;
-    syncCallbacks.current.fitHeight=fitHeight;
-    syncCallbacks.current.toggleTransitionMode=toggleTransitionMode;
-    syncCallbacks.current.theCurrentImageIndex=theCurrentImageIndex;
-    syncCallbacks.current.mouseHidden=mouseHidden;
-    syncCallbacks.current.theCurrentImage=theCurrentImage;
-  },[navigateImage,fitWidth,fitHeight,toggleTransitionMode,theCurrentImageIndex,mouseHidden,theCurrentImage]);
+    theViewer.current?.view(theCurrentImageIndex);
+  },[theCurrentImageIndex]);
 
 
   /** --- METHODS --- */
@@ -336,11 +337,6 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
   }
 
   /** --- RENDER --- */
-  if (theViewer.current)
-  {
-    theViewer.current?.view(theCurrentImageIndex);
-  }
-
   var videoMode:boolean=false;
   if (theCurrentImage && isVideo(theCurrentImage.link))
   {
