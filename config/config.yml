@@ -1,6 +1,9 @@
 # relative paths relative to where node is called (usually will be the top level of the repo)
 imagedir: C:\Users\ktkm\Desktop\h\cg
+# imagedir: C:\Users\ktkm\Desktop\test
+
 thumbnaildir: ./thumbnaildata
+# thumbnaildir: ./thumbnaildata2
 
 port: 80
 static_serve: true

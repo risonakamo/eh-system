@@ -1,4 +1,4 @@
-import React,{useEffect,useRef,useState} from "react";
+import React,{useLayoutEffect,useRef,useState} from "react";
 import cx from "classnames";
 
 import "./status-indicator.less";
@@ -17,7 +17,7 @@ export default function StatusIndicator(props:StatusIndicatorProps):JSX.Element
   const fadingOutTimer=useRef<ReturnType<typeof setTimeout>>();
 
   // trigger fade out on text change
-  useEffect(()=>{
+  useLayoutEffect(()=>{
     if (fadingOutTimer.current)
     {
       clearTimeout(fadingOutTimer.current);
