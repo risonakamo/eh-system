@@ -2,7 +2,7 @@ import React,{useRef,useEffect} from "react";
 import _ from "lodash";
 
 import SasButton from "components/sas-button/sasbutton";
-import PreviewThumbnail from "./previewthumbnail";
+import PreviewThumbnail,{PreviewThumbnailRef} from "./previewthumbnail";
 
 import "./previewpanel.less";
 
@@ -17,12 +17,31 @@ interface PreviewPanelProps
 
 export default function PreviewPanel(props:PreviewPanelProps):JSX.Element
 {
+  const selectedThumbnail=useRef<PreviewThumbnailRef|null>(null);
+
+  // on opening panel, scroll into view the selected thumbnail
+  useEffect(()=>{
+    if (props.showing)
+    {
+      selectedThumbnail.current?.scrollIntoView();
+    }
+  },[props.showing]);
+
   /** --- RENDER --- */
-  var thumbnails=_.map(props.thumbnails,(x:string,i:number)=>{
-    var selected=props.currentImageIndex==i?true:false;
+  const thumbnails:JSX.Element[]=_.map(props.thumbnails,(x:string,i:number)=>{
+    const selected:boolean=props.currentImageIndex==i;
+
+    // save the selected thumbnail ref
+    function saveSelectedThumbnail(ref:PreviewThumbnailRef):void
+    {
+      if (selected)
+      {
+        selectedThumbnail.current=ref;
+      }
+    }
 
     return <PreviewThumbnail thumbnailurl={x} key={i} selected={selected}
-      indexNumber={i} navigateImage={props.navigateImage}
+      indexNumber={i} navigateImage={props.navigateImage} ref={saveSelectedThumbnail}
       togglePanelShowing={props.togglePanelShowing}/>;
   });
 

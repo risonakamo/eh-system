@@ -1,4 +1,4 @@
-import React,{useRef} from "react";
+import React,{useRef,useImperativeHandle,forwardRef} from "react";
 
 interface PreviewThumbnailProps
 {
@@ -10,9 +10,22 @@ interface PreviewThumbnailProps
   togglePanelShowing():void
 }
 
-export default function PreviewThumbnail(props:PreviewThumbnailProps):JSX.Element
+export interface PreviewThumbnailRef
+{
+  scrollIntoView():void
+}
+
+export default forwardRef(PreviewThumbnail);
+function PreviewThumbnail(
+  props:PreviewThumbnailProps,
+  ref:React.Ref<PreviewThumbnailRef>
+):JSX.Element
 {
   const theElement=useRef<HTMLAnchorElement>(null);
+
+  useImperativeHandle(ref,()=>({
+    scrollIntoView
+  }));
 
   /** scroll this thumbnail element into view */
   function scrollIntoView():void
