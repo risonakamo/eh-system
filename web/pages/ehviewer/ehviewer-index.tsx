@@ -39,6 +39,8 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
 
   const [theStatusText,setStatusText]=useState<string>("");
 
+  const [zoomLock,setZoomLock]=useState<boolean>(false);
+
 
   /** --- REFS --- */
   const theViewer=useRef<any>(null);
@@ -52,6 +54,11 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
 
   const transitions=useRef<boolean>(false);
 
+  const thePrevImage=useRef<ImageObject|null>(null);
+
+  // when enabled, certain effects skipped for initial load
+  const initialLoadSkip=useRef<boolean>(true);
+
 
   /** --- SYNC REFS --- */
   const syncCallbacks=useRef({
@@ -61,7 +68,8 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
     toggleTransitionMode,
     theCurrentImageIndex,
     mouseHidden,
-    theCurrentImage
+    theCurrentImage,
+    zoomLock
   });
 
   useEffect(()=>{
@@ -72,7 +80,9 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
     syncCallbacks.current.theCurrentImageIndex=theCurrentImageIndex;
     syncCallbacks.current.mouseHidden=mouseHidden;
     syncCallbacks.current.theCurrentImage=theCurrentImage;
-  },[navigateImage,fitWidth,fitHeight,toggleTransitionMode,theCurrentImageIndex,mouseHidden,theCurrentImage]);
+    syncCallbacks.current.zoomLock=zoomLock;
+  },[navigateImage,fitWidth,fitHeight,toggleTransitionMode,theCurrentImageIndex,mouseHidden,
+    theCurrentImage,zoomLock]);
 
 
   /** --- EFFECTS --- */
@@ -93,8 +103,18 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
         viewed:()=>{
           imageChangeInProgress.current=false;
 
+          // in zoom lock mode, zoom to previous images zoom
+          if (syncCallbacks.current.zoomLock && thePrevImage.current)
+          {
+            theViewer.current?.zoomTo(thePrevImage.current.zoom);
+            theViewer.current.moveTo(
+              thePrevImage.current.left,
+              thePrevImage.current.top
+            );
+          }
+
           // if the current image has zoom and other custom values set, set the zoom the the values
-          if (_.get(syncCallbacks.current.theCurrentImage,"zoom"))
+          else if (_.get(syncCallbacks.current.theCurrentImage,"zoom"))
           {
             theViewer.current?.zoomTo(syncCallbacks.current.theCurrentImage!.zoom);
             theViewer.current.moveTo(
@@ -137,6 +157,25 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
     theViewer.current?.update();
     theViewer.current?.view(theCurrentImageIndex);
   },[theCurrentImageIndex]);
+
+  // update status text on zoom lock change
+  useEffect(()=>{
+    if (initialLoadSkip.current)
+    {
+      initialLoadSkip.current=false;
+      return;
+    }
+
+    if (zoomLock)
+    {
+      setStatusText("zoom lock ON");
+    }
+
+    else
+    {
+      setStatusText("zoom lock OFF");
+    }
+  },[zoomLock]);
 
 
   /** --- METHODS --- */
@@ -190,9 +229,6 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
       currentimage=theImgs[0];
     }
 
-    // console.log(currentimage);
-    // console.log(theViewer.current?);
-
     if (!imageChangeInProgress.current)
     {
       currentimage.zoom=theViewer.current?.imageData.ratio;
@@ -201,6 +237,7 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
     }
 
     imageChangeInProgress.current=true;
+    thePrevImage.current=currentimage;
     var newimage:ImageObject=theImgs[imgIndex];
 
     setCurrentImage(newimage);
@@ -264,6 +301,13 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
           syncCallbacks.current.fitHeight();
           justFitHeight.current=true;
         }
+      }
+
+      else if (e.key=="z")
+      {
+        setZoomLock((prev:boolean):boolean=>{
+          return !prev;
+        });
       }
 
       else if (e.key=="Escape")
@@ -335,6 +379,7 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
   {
     setPanelShowing(!panelShowing);
   }
+
 
   /** --- RENDER --- */
   var videoMode:boolean=false;
