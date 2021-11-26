@@ -403,7 +403,7 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
 
           if (isVideo(link))
           {
-            link="";
+            link=thumbnails.current[i];
           }
 
           return <li key={i}><img src={link} loading="lazy"/></li>;
