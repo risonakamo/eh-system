@@ -14,7 +14,11 @@ export function getImagesInPath2Flat(imageDataPath:string,targetPath:string):str
 }
 
 // generate thumbnails for the target path into the thumbnail data folder
-export async function generateThumbnailsForPath(imageDataPath:string,thumbnailDataPath:string,targetPath:string):Promise<void>
+export async function generateThumbnailsForPath(
+    imageDataPath:string,
+    thumbnailDataPath:string,
+    targetPath:string
+):Promise<void>
 {
     var imgs:string[];
     var existingThumbnails:string[];
