@@ -6,6 +6,11 @@ imagedir: C:\Users\ktkm\Desktop\h\cg
 thumbnaildir: ./thumbnaildata
 # thumbnaildir: ./thumbnaildata2
 
+# to use, cloudkey json must be in config folder and be named "cloudkey.json"
+google_cloud_config:
+  enabled: true
+  mainimage_bucket: ktkm-albumviewer-images
+
 port: 80
 static_serve: true
 thumbnail_gen_batch: 6
