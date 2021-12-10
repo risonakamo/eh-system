@@ -12,3 +12,5 @@ thumbnaildata2
 nginx/logs
 
 *.lnk
+
+config/cloudkey.json
