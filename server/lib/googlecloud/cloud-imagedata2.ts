@@ -31,6 +31,25 @@ export async function getCloudImageDataFlatDir(
     });
 }
 
+/** get cloud image data in string array form (each album is array of strings, all albums are shuffled,
+ *  and flattened) */
+export async function getCloudImageDataUrls(targetpath:string,bucket:Bucket):Promise<string[]>
+{
+    // remove initial slash if exists
+    if (targetpath[0]=="/")
+    {
+        targetpath=targetpath.slice(1);
+    }
+
+    const imagedata:ImageDataFlatDir=await getCloudImageDataFlatDir(targetpath,bucket);
+
+    return _.flatten(_.shuffle(_.map(imagedata,(x:CloudImageData[]):string[]=>{
+        return _.map(x,(y:CloudImageData):string=>{
+            return y.url;
+        });
+    })));
+}
+
 // [1]: full folder name path of input image
 const _nameExtract:RegExp=/(.*)\//;
 
