@@ -1,3 +1,4 @@
+import _ from "lodash";
 import {Bucket,Storage} from "@google-cloud/storage";
 
 import {getCloudImageDataFlatDir} from "../lib/googlecloud/cloud-imagedata2";
@@ -32,5 +33,27 @@ async function test2()
     console.dir(subdirform,{depth:null});
 }
 
+/** test recursive subdir form */
+async function test3()
+{
+    const storage=new Storage({
+        keyFilename:"config/cloudkey.json"
+    });
+
+    const bucket:Bucket=storage.bucket("ktkm-albumviewer-images");
+
+    const targetpath:string="stuff";
+    const targetsubdir:string="stuff/light";
+
+    const imagedata:ImageDataFlatDir=await getCloudImageDataFlatDir(targetpath,bucket);
+
+    const subdirform:ImageDataSubDir=toSubDirForm(imagedata,targetpath);
+    console.log(_.keys(subdirform));
+
+    const subdirform2:ImageDataSubDir=toSubDirForm(subdirform[targetsubdir],targetsubdir);
+    console.dir(subdirform2,{depth:null});
+}
+
 // test1();
-test2();
+// test2();
+test3();
