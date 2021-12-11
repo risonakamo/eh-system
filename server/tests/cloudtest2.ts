@@ -3,6 +3,7 @@ import {Bucket,Storage} from "@google-cloud/storage";
 
 import {getCloudImageDataFlatDir} from "../lib/googlecloud/cloud-imagedata2";
 import {toSubDirForm} from "../lib/googlecloud/cloud-subdirform";
+import {getCloudAlbumInfo} from "../lib/googlecloud/cloud-albuminfo2";
 
 /** test getting imagedata in flat dir form */
 async function test1()
@@ -54,6 +55,20 @@ async function test3()
     console.dir(subdirform2,{depth:null});
 }
 
+/** test cloud album info */
+async function test4()
+{
+    const storage=new Storage({
+        keyFilename:"config/cloudkey.json"
+    });
+
+    const bucket:Bucket=storage.bucket("ktkm-albumviewer-images");
+
+    const info:AlbumInfo[]=await getCloudAlbumInfo("",bucket);
+    console.log(info);
+}
+
 // test1();
 // test2();
-test3();
+// test3();
+test4();
