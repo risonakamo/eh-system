@@ -3,7 +3,7 @@ import {Bucket,File} from "@google-cloud/storage";
 
 import {getCloudImageDataDict,getImmediateDirNames,getImmediateDirs} from "./cloud-imagedata";
 
-async function getCloudAlbumInfo(targetpath:string,bucket:Bucket):AlbumInfo[]
+async function getCloudAlbumInfo(targetpath:string,bucket:Bucket):Promise<AlbumInfo[]>
 {
     const imagedata:ImageDataDirs=await getCloudImageDataDict(targetpath,bucket);
     const topDirs:string[]=getImmediateDirNames(targetpath,imagedata);

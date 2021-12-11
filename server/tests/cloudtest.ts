@@ -1,6 +1,7 @@
 import {Storage} from "@google-cloud/storage";
 
-import {getCloudImageData,getCloudImageDataDict,getImmediateDirNames} from "./lib/googlecloud/cloud-imagedata";
+import {getCloudImageData,getCloudImageDataDict,
+    getImmediateDirNames} from "../lib/googlecloud/cloud-imagedata";
 
 async function main()
 {
