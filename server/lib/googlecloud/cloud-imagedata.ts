@@ -47,6 +47,27 @@ export function getImmediateDirs(targetpath:string,imagedirs:ImageDataDirs):Imag
     });
 }
 
+/** get names of dirs that exist one level below the target path. the imagedirs must have been generated
+ *  using the same targetpath, or results will be inaccurate */
+export function getImmediateDirNames(targetpath:string,imagedirs:ImageDataDirs):string[]
+{
+    var names:Set<string>=new Set();
+
+    for (var name in imagedirs)
+    {
+        var immediateName:string|null=firstNotEmpty(name.replace(targetpath,"").split("/"));
+
+        if (!immediateName)
+        {
+            throw Error(`getImmediateDirNames: failed to parse dir name ${name}`);
+        }
+
+        names.add(immediateName);
+    }
+
+    return [...names];
+}
+
 // [1]: full folder name path of input image
 const _nameExtract:RegExp=/(.*)\//;
 
@@ -69,4 +90,19 @@ function extractFolder(imagepath:string):string|null
 function checkImmediateDir(dirname:string,targetpath:string):boolean
 {
     return _.filter(dirname.replace(targetpath,"").split("/")).length==1;
+}
+
+/** return the first item in an array that is not an empty string */
+function firstNotEmpty(array:string[]):string|null
+{
+    for (var i=0,l=array.length;i<l;i++)
+    {
+        var x:string=array[i];
+        if (x.length)
+        {
+            return x;
+        }
+    }
+
+    return null;
 }

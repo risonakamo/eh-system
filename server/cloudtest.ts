@@ -1,6 +1,6 @@
 import {Storage} from "@google-cloud/storage";
 
-import {getCloudImageData,getCloudImageDataDict,getImmediateDirs} from "./lib/googlecloud/cloud-imagedata";
+import {getCloudImageData,getCloudImageDataDict,getImmediateDirNames} from "./lib/googlecloud/cloud-imagedata";
 
 async function main()
 {
@@ -21,11 +21,11 @@ async function main2()
 
     const bucket=storage.bucket("ktkm-albumviewer-images");
 
-    const dictdata:ImageDataDirs=await getCloudImageDataDict("stuff",bucket);
+    const dictdata:ImageDataDirs=await getCloudImageDataDict("",bucket);
 
     console.log(dictdata);
 
-    console.log("immediates",getImmediateDirs("stuff/dark",dictdata));
+    console.log("immediates",getImmediateDirNames("",dictdata));
 }
 
 // main();
