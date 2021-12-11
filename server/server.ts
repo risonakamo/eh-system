@@ -7,7 +7,6 @@ import {Bucket,Storage} from "@google-cloud/storage";
 import {getImagesInPath2Flat} from "./lib/imagedata-service";
 import {getAlbumInfo} from "./lib/album-service";
 import {getServerConfig} from "./lib/server-config";
-import {getCloudImageData} from "./lib/googlecloud/cloud-imagedata";
 
 function main()
 {
@@ -75,7 +74,7 @@ function main()
 
         else if (mainCloudBucket)
         {
-            res.json(_.flatten(await getCloudImageData(req.body,mainCloudBucket)));
+
         }
     });
 
