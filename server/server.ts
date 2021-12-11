@@ -7,6 +7,8 @@ import {Bucket,Storage} from "@google-cloud/storage";
 import {getImagesInPath2Flat} from "./lib/imagedata-service";
 import {getAlbumInfo} from "./lib/album-service";
 import {getServerConfig} from "./lib/server-config";
+import {getCloudImageDataUrls} from "./lib/googlecloud/cloud-imagedata2";
+import {getCloudAlbumInfo} from "./lib/googlecloud/cloud-albuminfo2";
 
 function main()
 {
@@ -74,15 +76,23 @@ function main()
 
         else if (mainCloudBucket)
         {
-
+            res.json(await getCloudImageDataUrls(req.body,mainCloudBucket));
         }
     });
 
     // given a target album path, retrieve album information for that path.
-    app.post("/get-album-info",express.text(),(req,res)=>{
+    app.post("/get-album-info",express.text(),async (req,res)=>{
         console.log("album info:",req.body || "/");
 
-        res.json(getAlbumInfo(fullImageDataDir,req.body));
+        if (!serverConfig.google_cloud_config.enabled)
+        {
+            res.json(getAlbumInfo(fullImageDataDir,req.body));
+        }
+
+        else if (mainCloudBucket)
+        {
+            res.json(await getCloudAlbumInfo(req.body,mainCloudBucket));
+        }
     });
     // --- end apis ---
 

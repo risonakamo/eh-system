@@ -22,7 +22,7 @@ export async function getCloudAlbumInfo(targetpath:string,bucket:Bucket):Promise
         const isAlbum:boolean=i in imagedata;
 
         return {
-            title:i,
+            title:extractPathEnd(i) || "__error__",
             items:flattenedItems.length,
             immediateItems:_.keys(subdirsOfSubDir).length,
             img:_.sample(flattenedItems)!.url,
@@ -30,4 +30,10 @@ export async function getCloudAlbumInfo(targetpath:string,bucket:Bucket):Promise
             album:isAlbum
         };
     });
+}
+
+/** extract last item in a path */
+function extractPathEnd(path:string):string|undefined
+{
+    return _.last(path.split("/"));
 }
