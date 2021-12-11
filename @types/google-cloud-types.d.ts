@@ -5,6 +5,11 @@ type ImageDataDirs=Record<string,string[]>
  *  representing a folder in the bucket. contents of the key will be the files in the bucket */
 type ImageDataFlatDir=Record<string,CloudImageData[]>
 
+/** image data flat dir organised by subdir. a subdir is a dir relative to some target path, that is,
+ *  all sub dirs in this object will be of a folder that exists directly below some target path when this
+ *  object is generated */
+type ImageDataSubDir=Record<string,ImageDataFlatDir>
+
 interface CloudImageData
 {
     // cloud path in the bucket including filename

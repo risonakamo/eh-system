@@ -1,5 +1,5 @@
 import _ from "lodash";
-import {Bucket,File,Storage} from "@google-cloud/storage";
+import {Bucket,File} from "@google-cloud/storage";
 
 /** get image data from a target path in a cloud bucket in flat directory form */
 export async function getCloudImageDataFlatDir(
@@ -47,17 +47,4 @@ function extractFolder(imagepath:string):string|null
     }
 
     return match[1];
-}
-
-/** test getting imagedata in flat dir form */
-export async function test1()
-{
-    const storage=new Storage({
-        keyFilename:"config/cloudkey.json"
-    });
-
-    const bucket:Bucket=storage.bucket("ktkm-albumviewer-images");
-
-    const imagedata:ImageDataFlatDir=await getCloudImageDataFlatDir("stuff/dark",bucket);
-    console.log(imagedata);
 }
