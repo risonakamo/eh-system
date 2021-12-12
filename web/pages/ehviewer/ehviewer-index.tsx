@@ -10,6 +10,7 @@ import VideoView,{isVideo} from "components/video-view/videoview";
 import StatusIndicator from "components/status-indicator/status-indicator";
 
 import {requestAlbum} from "api/album-api";
+import {imageUrlToThumbnailUrl} from "lib/thumbnail-link";
 
 import "./ehviewer-index.less";
 import "viewerjs/dist/viewer.css";
@@ -362,15 +363,7 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
     setImgs(imgs);
 
     thumbnails.current=_.map(urls,(x:string)=>{
-      var match=x.match(/\/imagedata(.*)/);
-      if (match && match[1])
-      {
-        return `/thumbnaildata/${match[1]}`
-          .replace(/mp4|webm|png|jpeg|webp|gif/,"jpg")
-          .replace(/\/\//,"/");
-      }
-
-      return "";
+      return imageUrlToThumbnailUrl(x);
     });
   }
 
