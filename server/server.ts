@@ -66,22 +66,36 @@ function main()
 
     // --- apis ---
     // get an album from the image data folder. also generate thumbnails if needed.
-    app.post("/get-album",express.text(),async (req,res)=>{
+    app.post("/get-album",express.text(),
+    async (req:express.Request<string>,res:express.Response<AlbumResponse>)=>{
         console.log("get album:",req.body);
 
         if (!serverConfig.google_cloud_config.enabled)
         {
-            res.json(getImagesInPath2Flat(fullImageDataDir,req.body));
+            res.json({
+                mode:"local",
+                urls:getImagesInPath2Flat(fullImageDataDir,req.body)
+            });
         }
 
         else if (mainCloudBucket)
         {
-            res.json(await getCloudImageDataUrls(req.body,mainCloudBucket));
+            const response:AlbumResponseCloud={
+                mode:"cloud",
+                urls:await getCloudImageDataUrls(req.body,mainCloudBucket),
+                cloudInfo:{
+                    mainUrl:serverConfig.google_cloud_config.mainimage_bucket,
+                    thumbnailUrl:serverConfig.google_cloud_config.thumbnail_bucket
+                }
+            };
+
+            res.json(response);
         }
     });
 
     // given a target album path, retrieve album information for that path.
-    app.post("/get-album-info",express.text(),async (req,res)=>{
+    app.post("/get-album-info",express.text(),
+    async (req:express.Request<string>,res:express.Response<AlbumInfo[]>)=>{
         console.log("album info:",req.body || "/");
 
         if (!serverConfig.google_cloud_config.enabled)

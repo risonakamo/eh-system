@@ -60,6 +60,11 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
   // when enabled, certain effects skipped for initial load
   const initialLoadSkip=useRef<boolean>(true);
 
+  const savedAlbumResponse=useRef<AlbumResponse>({
+    mode:"local",
+    urls:[]
+  });
+
 
   /** --- SYNC REFS --- */
   const syncCallbacks=useRef({
@@ -143,7 +148,8 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
       keyControl();
       mouseHider();
 
-      linksLoad(await requestAlbum(props.match.params.albumpath));
+      savedAlbumResponse.current=await requestAlbum(props.match.params.albumpath);
+      linksLoad(savedAlbumResponse.current.urls);
       setTitle(props.match.params.albumpath);
     })();
   },[]);
@@ -363,7 +369,11 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
     setImgs(imgs);
 
     thumbnails.current=_.map(urls,(x:string)=>{
-      return imageUrlToThumbnailUrl(x);
+      return imageUrlToThumbnailUrl(
+        x,
+        savedAlbumResponse.current.mode=="cloud",
+        (savedAlbumResponse.current as AlbumResponseCloud).cloudInfo
+      );
     });
   }
 

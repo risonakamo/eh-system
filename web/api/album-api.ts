@@ -1,7 +1,7 @@
 // api functions for accessing eh-viewer server backend
 
 /** retrieve images from a specified album path */
-export async function requestAlbum(path:string):Promise<string[]>
+export async function requestAlbum(path:string):Promise<AlbumResponse>
 {
   return (await fetch("/get-album",{
     method:"POST",

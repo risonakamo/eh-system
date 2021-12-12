@@ -1,26 +1,24 @@
 // lib for dealing with url conversions to thumbnail urls
 
-import {CLOUD_MODE,CLOUD_MAIN_BUCKET,CLOUD_THUMBNAIL_BUCKET} from "lib/defines";
-
 /** match url after /imagedata
  *  [1]: the url */
 const _imageDataMatch:RegExp=/\/imagedata(.*)/;
 
-/** match url after some cloud bucket url name
- *  [1]: the url */
-const _cloudMatch:RegExp=new RegExp(`\/${CLOUD_MAIN_BUCKET}(.*)`);
-
 /** do image url to thumbnail url conversion based on configured operation mode */
-export function imageUrlToThumbnailUrl(imageUrl:string):string
+export function imageUrlToThumbnailUrl(
+    imageUrl:string,
+    cloudMode:boolean,
+    cloudOptions?:CloudModeConfiguration
+):string
 {
-    if (!CLOUD_MODE)
+    if (!cloudMode || !cloudOptions)
     {
         return localModeReplace(imageUrl);
     }
 
     else
     {
-        return cloudModeMatch(imageUrl);
+        return cloudModeMatch(imageUrl,cloudOptions);
     }
 }
 
@@ -38,9 +36,12 @@ function localModeReplace(imageUrl:string):string
 }
 
 /** determine thumbnail url while using google cloud operation mode */
-function cloudModeMatch(imageUrl:string):string
+function cloudModeMatch(imageUrl:string,options:CloudModeConfiguration):string
 {
-    const match:RegExpMatchArray|null=imageUrl.match(_cloudMatch);
+    /** match url after some cloud bucket url name
+     *  [1]: the url */
+    const cloudMatch:RegExp=new RegExp(`\/${options.mainUrl}(.*)`);
+    const match:RegExpMatchArray|null=imageUrl.match(cloudMatch);
 
     if (!match || match.length!=2)
     {
@@ -49,7 +50,7 @@ function cloudModeMatch(imageUrl:string):string
 
     return cleanUrlForThumbnail(
         `https://storage.googleapis.com/`
-        +`${CLOUD_THUMBNAIL_BUCKET}${match[1]}`
+        +`${options.thumbnailUrl}${match[1]}`
     );
 }
 

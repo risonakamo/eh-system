@@ -6,6 +6,7 @@ interface ServerConfig
     google_cloud_config:{
         enabled:boolean
         mainimage_bucket:string
+        thumbnail_bucket:string
     }
 
     port:number

@@ -12,6 +12,7 @@ thumbnaildir: ./thumbnaildatas/thumbnaildata
 google_cloud_config:
   enabled: true
   mainimage_bucket: ktkm-albumviewer-images
+  thumbnail_bucket: ktkm-albumviewer-thumbnails
 
 port: 80
 static_serve: true
