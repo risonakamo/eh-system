@@ -10,6 +10,8 @@ type ImageDataFlatDir=Record<string,CloudImageData[]>
  *  object is generated */
 type ImageDataSubDir=Record<string,ImageDataFlatDir>
 
+type CloudStoragePubSubEventType="OBJECT_FINALIZE"
+
 interface CloudImageData
 {
     // cloud path in the bucket including filename
@@ -19,4 +21,11 @@ interface CloudImageData
     folderPath:string
 
     url:string
+}
+
+interface CloudStoragePubSubMessageAttributes
+{
+    eventType:CloudStoragePubSubEventType
+    objectId:string
+    bucketId:string
 }
