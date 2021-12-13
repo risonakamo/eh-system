@@ -18,6 +18,20 @@ export async function generateThumbnails(jobs:ThumbnailGenJob[],chunks:number=5)
     }
 }
 
+/** basic generate single thumbnail function on full paths. output path needs proper file extension */
+export async function generateSingleThumbnail(path:string,outputPath:string):Promise<void>
+{
+    if (isVideo(path))
+    {
+        return generateVideoThumbnail(path,outputPath);
+    }
+
+    else
+    {
+        return generateImageThumbnail(path,outputPath);
+    }
+}
+
 /** generate thumbnails for array of thumbnail gen jobs, without chunking */
 async function generateThumbnailsNoChunk(jobs:ThumbnailGenJob[]):Promise<void[]>
 {
