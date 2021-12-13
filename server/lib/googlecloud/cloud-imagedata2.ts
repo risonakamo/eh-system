@@ -1,5 +1,6 @@
 import _ from "lodash";
 import {Bucket,File} from "@google-cloud/storage";
+import {extname} from "path";
 
 /** get image data from a target path in a cloud bucket in flat directory form */
 export async function getCloudImageDataFlatDir(
@@ -14,7 +15,7 @@ export async function getCloudImageDataFlatDir(
     const imagedata:CloudImageData[]=_.filter(_.map(files,(file:File):CloudImageData|null=>{
         const extractedFolderName:string|null=extractFolder(file.name);
 
-        if (!extractedFolderName)
+        if (!extractedFolderName || !extname(file.name))
         {
             return null;
         }
