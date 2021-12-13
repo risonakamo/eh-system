@@ -14,3 +14,4 @@ nginx/logs
 *.lnk
 
 config/cloudkey.json
+gcloud_deploy/deployment
