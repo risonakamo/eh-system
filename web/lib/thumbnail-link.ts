@@ -48,10 +48,8 @@ function cloudModeMatch(imageUrl:string,options:CloudModeConfiguration):string
         return "";
     }
 
-    return cleanUrlForThumbnail(
-        `https://storage.googleapis.com/`
-        +`${options.thumbnailUrl}${match[1]}`
-    );
+    return "https://storage.googleapis.com/"+
+        cleanUrlForThumbnail(options.thumbnailUrl+match[1]);
 }
 
 /** do some cleaning and extension replacement to do final conversions for image url to thumbnail url */
