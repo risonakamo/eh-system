@@ -1,7 +1,6 @@
 {
   "name": "eh-system",
   "version": "3.0.0",
-  "main": "server-build/server.js",
   "scripts": {
     "build": "webpack",
     "watch": "webpack --watch",

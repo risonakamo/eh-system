@@ -1,0 +1,7 @@
+runtime: nodejs16
+service: album-api
+
+entrypoint: node server-build/server.js
+
+automatic_scaling:
+  max_instances: 4
