@@ -57,6 +57,9 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
 
   const thePrevImage=useRef<ImageObject|null>(null);
 
+  // when true, after loading an image, will turn on zoom lock
+  const reenableZoomLock=useRef<boolean>(false);
+
   // when enabled, certain effects skipped for initial load
   const initialLoadSkip=useRef<boolean>(true);
 
@@ -141,6 +144,12 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
           else
           {
             fitWidth(true);
+          }
+
+          if (reenableZoomLock.current)
+          {
+            setZoomLock(true);
+            reenableZoomLock.current=false;
           }
         }
       });
@@ -230,7 +239,7 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
       return;
     }
 
-    var currentimage=theCurrentImage;
+    var currentimage:ImageObject|null=theCurrentImage;
     if (!currentimage)
     {
       currentimage=theImgs[0];
@@ -383,6 +392,27 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
     setPanelShowing(!panelShowing);
   }
 
+  /** preview panel would like to navigate */
+  function h_previewPanelJump(img:number):void
+  {
+    // if attempting to jump to the same image, do nothing
+    if (img==theCurrentImageIndex)
+    {
+      return;
+    }
+
+    // if zoom lock is enabled, then disable it, and set it to be renabled after the jump is completed.
+    // by disabling zoom lock, jumping will result in a zoom level of the target image. but then, zoom
+    // lock will be enabled, as it was enabled before jumping.
+    if (zoomLock)
+    {
+      reenableZoomLock.current=true;
+      setZoomLock(false);
+    }
+
+    navigateImage(img);
+  }
+
 
   /** --- RENDER --- */
   var videoMode:boolean=false;
@@ -417,7 +447,7 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
     </div>
 
     <PreviewPanel thumbnails={thumbnails.current} currentImageIndex={theCurrentImageIndex}
-      showing={panelShowing} navigateImage={navigateImage}
+      showing={panelShowing} navigateImage={h_previewPanelJump}
       togglePanelShowing={togglePanelShowing}/>
   </>;
 }

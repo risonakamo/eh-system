@@ -2,6 +2,9 @@
 imagedir: C:\Users\ktkm\Desktop\h\cg
 thumbnaildir: ./thumbnaildatas/thumbnaildata
 
+# imagedir: C:\Users\ktkm\Desktop\images\test
+# thumbnaildir: ./thumbnaildatas/test_thumbnails
+
 # imagedir: C:\Users\ktkm\Desktop\h\3d
 # thumbnaildir: ./thumbnaildatas/thumbnaildata2
 
