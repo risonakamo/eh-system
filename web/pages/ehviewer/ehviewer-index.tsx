@@ -27,6 +27,8 @@ interface EhViewerProps
   match:RouterMatch //match from router
 }
 
+const IMAGE_PRELOAD_AMOUNT:number=2;
+
 export default function EhViewerMain(props:EhViewerProps):JSX.Element
 {
   /** --- STATES --- */
@@ -78,7 +80,8 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
     theCurrentImageIndex,
     mouseHidden,
     theCurrentImage,
-    zoomLock
+    zoomLock,
+    preloadFuture
   });
 
   useEffect(()=>{
@@ -90,8 +93,9 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
     syncCallbacks.current.mouseHidden=mouseHidden;
     syncCallbacks.current.theCurrentImage=theCurrentImage;
     syncCallbacks.current.zoomLock=zoomLock;
+    syncCallbacks.current.preloadFuture=preloadFuture;
   },[navigateImage,fitWidth,fitHeight,toggleTransitionMode,theCurrentImageIndex,mouseHidden,
-    theCurrentImage,zoomLock]);
+    theCurrentImage,zoomLock,preloadFuture]);
 
 
   /** --- EFFECTS --- */
@@ -151,6 +155,8 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
             setZoomLock(true);
             reenableZoomLock.current=false;
           }
+
+          syncCallbacks.current.preloadFuture(IMAGE_PRELOAD_AMOUNT);
         }
       });
 
@@ -386,6 +392,22 @@ export default function EhViewerMain(props:EhViewerProps):JSX.Element
     });
   }
 
+  /** from the current image index, preload the next <preload amount> images */
+  function preloadFuture(preloadAmount:number):void
+  {
+    const preloadImgs:ImageObject[]=theImgs.slice(
+      theCurrentImageIndex+1,
+      theCurrentImageIndex+1+preloadAmount
+    );
+
+    preloadImgs.forEach((x:ImageObject)=>{
+      const img=new Image();
+      img.src=x.link;
+    });
+  }
+
+
+  /** --- HANDLERS --- */
   // toggle preview panel showing state
   function togglePanelShowing():void
   {
