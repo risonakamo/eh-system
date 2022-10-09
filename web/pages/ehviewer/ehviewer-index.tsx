@@ -27,7 +27,7 @@ interface EhViewerProps
   match:RouterMatch //match from router
 }
 
-const IMAGE_PRELOAD_AMOUNT:number=2;
+const IMAGE_PRELOAD_AMOUNT:number=6;
 
 export default function EhViewerMain(props:EhViewerProps):JSX.Element
 {

@@ -147,6 +147,7 @@ function isImageExt(ext:string):boolean
         case ".jpg":
         case ".jpeg":
         case ".gif":
+        case ".webp":
         return true;
     }
 
