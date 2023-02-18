@@ -9,10 +9,13 @@ import {getAlbumInfo} from "./lib/album-service";
 import {getServerConfig} from "./lib/server-config";
 import {getCloudImageDataUrls} from "./lib/googlecloud/cloud-imagedata2";
 import {getCloudAlbumInfo} from "./lib/googlecloud/cloud-albuminfo2";
+import {getServerArgs} from "./lib/cli";
 
 function main()
 {
-    const serverConfig:ServerConfig=getServerConfig();
+    const serverArgs:ServerCliArgs=getServerArgs();
+
+    const serverConfig:ServerConfig=getServerConfig(serverArgs.configLocation);
 
     const fullImageDataDir:string=serverConfig.imagedir;
     const fullThumbnailDataDir:string=serverConfig.thumbnaildir;
@@ -112,6 +115,7 @@ function main()
 
     app.listen(serverConfig.port,()=>{
         console.log(chalk.green("EH-SYSTEM started"));
+        console.log("config:",chalk.yellow(serverArgs.configLocation));
 
         if (!serverConfig.google_cloud_config.enabled)
         {

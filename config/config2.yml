@@ -1,0 +1,22 @@
+# relative paths relative to where node is called (usually will be the top level of the repo)
+# imagedir: C:\Users\ktkm\Desktop\h\cg
+# thumbnaildir: ./thumbnaildatas/thumbnaildata
+
+# imagedir: C:\Users\ktkm\Desktop\images\test
+# thumbnaildir: ./thumbnaildatas/test_thumbnails
+
+imagedir: C:\Users\ktkm\Desktop\h\3d
+thumbnaildir: ./thumbnaildatas/thumbnaildata2
+
+# imagedir: C:\Users\ktkm\Desktop\cloud_test\testalbums
+# thumbnaildir: ./thumbnaildatas/thumbnaildata3
+
+# to use, cloudkey json must be in config folder and be named "cloudkey.json"
+google_cloud_config:
+  enabled: false
+  mainimage_bucket: ktkm-albumviewer-images
+  thumbnail_bucket: ktkm-albumviewer-thumbnails
+
+port: 80
+static_serve: true
+thumbnail_gen_batch: 6
