@@ -13,6 +13,7 @@ interface AlbumMenuProps
   navigateRandom():void //navigate random album button action
   navigateRandomNewTab():void
   navigateCurrent():void //navigate to current album action
+  shuffleAlbum():void
 }
 
 export default function AlbumMenu2(props:AlbumMenuProps):JSX.Element
@@ -52,6 +53,8 @@ export default function AlbumMenu2(props:AlbumMenuProps):JSX.Element
         hoverIcon="/assets/imgs/shuffle-pink.png"/>
       <AMButton onClick={props.navigateCurrent} disabled={!props.targetPath} title="Open Album"
         normalIcon="/assets/imgs/viewer-white.png" hoverIcon="/assets/imgs/viewer-pink.png"/>
+      <AMButton onClick={props.shuffleAlbum} disabled={false} title="Shuffle"
+        normalIcon="/assets/imgs/shuffle-pink.png" hoverIcon="/assets/imgs/shuffle-white.png"/>
     </div>
     <div className="toast-zone">
       {generateToasts()}

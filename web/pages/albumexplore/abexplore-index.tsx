@@ -129,13 +129,22 @@ export default function AbExploreMain(props:AbExploreProps):JSX.Element
     window.location.replace(url);
   }
 
+  /** shuffle the album items */
+  function shuffleAlbumItems():void
+  {
+    setAlbumItems(
+      _.shuffle(theAlbumItems),
+    );
+  }
+
 
   /** ---- RENDER ---- */
   var targetpath:string=props.match.params.targetpath || "";
 
   return <>
     <AlbumMenu targetPath={targetpath} navigateRandom={navigateToRandom}
-      navigateCurrent={openCurrentAlbum} navigateRandomNewTab={navigateToRandomNewTab}/>
+      navigateCurrent={openCurrentAlbum} navigateRandomNewTab={navigateToRandomNewTab}
+      shuffleAlbum={shuffleAlbumItems}/>
     <div className="tiles">
       {_.map(theAlbumItems,(x:AlbumInfo)=>{
         return createAlbumTile(x,targetpath);
