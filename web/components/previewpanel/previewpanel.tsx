@@ -1,7 +1,7 @@
 import React,{useRef,useEffect} from "react";
 import _ from "lodash";
 
-import SasButton from "components/sas-button/sasbutton";
+import AMButton from "components/album-menu-button/album-menu-button";
 import PreviewThumbnail,{PreviewThumbnailRef} from "./previewthumbnail";
 
 import "./previewpanel.less";
@@ -27,6 +27,14 @@ export default function PreviewPanel(props:PreviewPanelProps):JSX.Element
     }
   },[props.showing]);
 
+  /** try to go back to album page */
+  function goBackToAlbumPage():void
+  {
+    const currentUrl=new URL(window.location.href);
+    currentUrl.pathname=currentUrl.pathname.replace(/^\/viewer\//, "/albums/");
+    window.location.href=currentUrl.pathname;
+  }
+
   /** --- RENDER --- */
   const thumbnails:JSX.Element[]=_.map(props.thumbnails,(x:string,i:number)=>{
     const selected:boolean=props.currentImageIndex==i;
@@ -47,7 +55,8 @@ export default function PreviewPanel(props:PreviewPanelProps):JSX.Element
 
   return <div className={`preview-panel ${props.showing?"":"hidden"}`}>
     <div className="header">
-      <SasButton href="/" className="home-icon"/>
+      <AMButton onClick={goBackToAlbumPage} title="Back to Album Page"
+        normalIcon="/assets/imgs/icon-white.png" hoverIcon="/assets/imgs/icon-pink.png"/>
     </div>
     {thumbnails}
   </div>;
